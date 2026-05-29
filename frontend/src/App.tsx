@@ -8,6 +8,10 @@ const DemoWorkbenchPage = lazy(() =>
 
 const PaperDemoPage = lazy(() => import("./pages/PaperDemoPage").then((m) => ({ default: m.PaperDemoPage })));
 
+const OmniaPresentationDemo = lazy(() =>
+  import("./pages/OmniaPresentationDemo").then((m) => ({ default: m.OmniaPresentationDemo })),
+);
+
 function RouteFallback() {
   return <PageSkeleton rows={3} />;
 }
@@ -34,6 +38,14 @@ export default function App() {
       <Route path="/" element={<Navigate to="/paper-demo" replace />} />
       <Route
         path="/paper-demo"
+        element={
+          <Suspense fallback={<RouteFallback />}>
+            <OmniaPresentationDemo />
+          </Suspense>
+        }
+      />
+      <Route
+        path="/paper-demo-legacy"
         element={
           <Suspense fallback={<RouteFallback />}>
             <PaperDemoPage />

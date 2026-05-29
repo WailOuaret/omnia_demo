@@ -1,0 +1,244 @@
+{
+  "datasetId": "wn18rr",
+  "label": "WN18RR",
+  "shortName": "WN18RR",
+  "recommendedMode": "triple-rag",
+  "publicStatus": "public",
+  "static": false,
+  "paperStats": {
+    "entities": 40943,
+    "relations": 11,
+    "triples": 93003
+  },
+  "sample": {
+    "knownTriples": 1200,
+    "missingTriples": 300,
+    "rowCount": 93003,
+    "sampleProportion": 0.8
+  },
+  "metrics": {
+    "generatedCandidates": 161,
+    "filterQueueCount": 1,
+    "filteringEnabled": true,
+    "filteringModel": "TransE",
+    "threshold": 0.75916987657547,
+    "filteringAccepted": 0,
+    "filteringRejected": 1,
+    "llmAvailable": true,
+    "llmStrategyLabel": "RAG",
+    "llmTopK": 2,
+    "llmAccepted": 0,
+    "llmRejected": 0,
+    "llmUnresolved": 0
+  },
+  "cluster": {
+    "sharedRelation": "_hypernym",
+    "sharedTail": "00007846",
+    "members": [
+      "09860415",
+      "09883452",
+      "09970088",
+      "10052843",
+      "10635788"
+    ],
+    "clusterKey": "(_hypernym, 00007846)"
+  },
+  "overview": {
+    "nodes": [
+      {
+        "id": "12940609",
+        "label": "12940609"
+      },
+      {
+        "id": "12943049",
+        "label": "12943049"
+      },
+      {
+        "id": "11857320",
+        "label": "11857320"
+      },
+      {
+        "id": "12533190",
+        "label": "12533190"
+      },
+      {
+        "id": "12858150",
+        "label": "12858150"
+      },
+      {
+        "id": "12939874",
+        "label": "12939874"
+      },
+      {
+        "id": "11699071",
+        "label": "11699071"
+      },
+      {
+        "id": "12292877",
+        "label": "12292877"
+      },
+      {
+        "id": "12848499",
+        "label": "12848499"
+      },
+      {
+        "id": "12205694",
+        "label": "12205694"
+      }
+    ],
+    "edges": [
+      {
+        "id": "12939874|_hypernym|12205694|known|known",
+        "source": "12939874",
+        "target": "12205694",
+        "relation": "_hypernym",
+        "status": "known"
+      },
+      {
+        "id": "12533190|_hypernym|12205694|known|known",
+        "source": "12533190",
+        "target": "12205694",
+        "relation": "_hypernym",
+        "status": "known"
+      },
+      {
+        "id": "12943049|_hypernym|12205694|known|known",
+        "source": "12943049",
+        "target": "12205694",
+        "relation": "_hypernym",
+        "status": "known"
+      },
+      {
+        "id": "11857320|_hypernym|12205694|known|known",
+        "source": "11857320",
+        "target": "12205694",
+        "relation": "_hypernym",
+        "status": "known"
+      },
+      {
+        "id": "11699071|_hypernym|12205694|known|known",
+        "source": "11699071",
+        "target": "12205694",
+        "relation": "_hypernym",
+        "status": "known"
+      },
+      {
+        "id": "12848499|_hypernym|12205694|known|known",
+        "source": "12848499",
+        "target": "12205694",
+        "relation": "_hypernym",
+        "status": "known"
+      },
+      {
+        "id": "12292877|_hypernym|12205694|known|known",
+        "source": "12292877",
+        "target": "12205694",
+        "relation": "_hypernym",
+        "status": "known"
+      },
+      {
+        "id": "12940609|_hypernym|12205694|known|known",
+        "source": "12940609",
+        "target": "12205694",
+        "relation": "_hypernym",
+        "status": "known"
+      },
+      {
+        "id": "12858150|_hypernym|12205694|known|known",
+        "source": "12858150",
+        "target": "12205694",
+        "relation": "_hypernym",
+        "status": "known"
+      }
+    ]
+  },
+  "guided": {
+    "nodes": [
+      {
+        "id": "09970088",
+        "label": "09970088",
+        "role": "cluster_member",
+        "clusterId": "cluster-5"
+      },
+      {
+        "id": "10052843",
+        "label": "10052843",
+        "role": "cluster_member",
+        "clusterId": "cluster-5"
+      },
+      {
+        "id": "09883452",
+        "label": "09883452",
+        "role": "cluster_member",
+        "clusterId": "cluster-5"
+      },
+      {
+        "id": "10635788",
+        "label": "10635788",
+        "role": "cluster_member",
+        "clusterId": "cluster-5"
+      },
+      {
+        "id": "00007846",
+        "label": "00007846",
+        "role": "shared_tail",
+        "clusterId": "cluster-5"
+      },
+      {
+        "id": "09860415",
+        "label": "09860415",
+        "role": "cluster_member",
+        "clusterId": "cluster-5"
+      }
+    ],
+    "edges": [
+      {
+        "id": "10052843|_hypernym|00007846|known|known",
+        "source": "10052843",
+        "target": "00007846",
+        "relation": "_hypernym",
+        "status": "known",
+        "candidateId": null,
+        "role": "cluster_key"
+      },
+      {
+        "id": "09883452|_hypernym|00007846|known|known",
+        "source": "09883452",
+        "target": "00007846",
+        "relation": "_hypernym",
+        "status": "known",
+        "candidateId": null,
+        "role": "cluster_key"
+      },
+      {
+        "id": "09970088|_hypernym|00007846|known|known",
+        "source": "09970088",
+        "target": "00007846",
+        "relation": "_hypernym",
+        "status": "known",
+        "candidateId": null,
+        "role": "cluster_key"
+      },
+      {
+        "id": "09860415|_hypernym|00007846|known|known",
+        "source": "09860415",
+        "target": "00007846",
+        "relation": "_hypernym",
+        "status": "known",
+        "candidateId": null,
+        "role": "cluster_key"
+      },
+      {
+        "id": "10635788|_hypernym|00007846|known|known",
+        "source": "10635788",
+        "target": "00007846",
+        "relation": "_hypernym",
+        "status": "known",
+        "candidateId": null,
+        "role": "cluster_key"
+      }
+    ]
+  },
+  "candidates": [],
+  "selectedCandidateId": null
+}

@@ -1,0 +1,783 @@
+{
+  "datasetId": "fb15k237",
+  "label": "FB15K-237",
+  "shortName": "FB15K-237",
+  "recommendedMode": "triple-rag",
+  "publicStatus": "public",
+  "static": false,
+  "paperStats": {
+    "entities": 12993,
+    "relations": 29,
+    "triples": 59270
+  },
+  "sample": {
+    "knownTriples": 1200,
+    "missingTriples": 300,
+    "rowCount": 310116,
+    "sampleProportion": 0.8
+  },
+  "metrics": {
+    "generatedCandidates": 460,
+    "filterQueueCount": 129,
+    "filteringEnabled": true,
+    "filteringModel": "TransE",
+    "threshold": 0.6221308712235682,
+    "filteringAccepted": 27,
+    "filteringRejected": 102,
+    "llmAvailable": false,
+    "llmStrategyLabel": "RAG",
+    "llmTopK": 2,
+    "llmAccepted": 0,
+    "llmRejected": 24,
+    "llmUnresolved": 0
+  },
+  "cluster": {
+    "sharedRelation": "/film/film/language",
+    "sharedTail": "/m/02h40lc",
+    "members": [
+      "/m/02b6n9",
+      "/m/02gqm3",
+      "/m/02vnmc9",
+      "/m/084302",
+      "/m/0k4bc"
+    ],
+    "clusterKey": "(/film/film/language, /m/02h40lc)"
+  },
+  "overview": {
+    "nodes": [
+      {
+        "id": "/m/05kj_",
+        "label": "05kj_"
+      },
+      {
+        "id": "/m/059j1m",
+        "label": "059j1m"
+      },
+      {
+        "id": "/m/0_lr1",
+        "label": "0_lr1"
+      },
+      {
+        "id": "/m/09c7w0",
+        "label": "09c7w0"
+      },
+      {
+        "id": "/m/01dq5z",
+        "label": "01dq5z"
+      },
+      {
+        "id": "/m/0gv10",
+        "label": "0gv10"
+      },
+      {
+        "id": "/m/07h34",
+        "label": "07h34"
+      },
+      {
+        "id": "/m/06r3p2",
+        "label": "06r3p2"
+      },
+      {
+        "id": "/m/01c333",
+        "label": "01c333"
+      },
+      {
+        "id": "/m/02yvct",
+        "label": "02yvct"
+      },
+      {
+        "id": "/m/0db94w",
+        "label": "0db94w"
+      },
+      {
+        "id": "/m/0rs6x",
+        "label": "0rs6x"
+      },
+      {
+        "id": "/m/0rkkv",
+        "label": "0rkkv"
+      },
+      {
+        "id": "/m/04rwx",
+        "label": "04rwx"
+      },
+      {
+        "id": "/m/0b90_r",
+        "label": "0b90_r"
+      },
+      {
+        "id": "/m/02q7fl9",
+        "label": "02q7fl9"
+      },
+      {
+        "id": "/m/0778p",
+        "label": "0778p"
+      },
+      {
+        "id": "/m/02q3bb",
+        "label": "02q3bb"
+      },
+      {
+        "id": "/m/085ccd",
+        "label": "085ccd"
+      }
+    ],
+    "edges": [
+      {
+        "id": "/m/09c7w0|/location/country/second_level_divisions|/m/0gv10|known|known",
+        "source": "/m/09c7w0",
+        "target": "/m/0gv10",
+        "relation": "/location/country/second_level_divisions",
+        "status": "known"
+      },
+      {
+        "id": "/m/09c7w0|/location/location/contains|/m/07h34|known|known",
+        "source": "/m/09c7w0",
+        "target": "/m/07h34",
+        "relation": "/location/location/contains",
+        "status": "known"
+      },
+      {
+        "id": "/m/0b90_r|/location/location/adjoin_s./location/adjoining_relationship/adjoins|/m/09c7w0|known|known",
+        "source": "/m/0b90_r",
+        "target": "/m/09c7w0",
+        "relation": "/location/location/adjoin_s./location/adjoining_relationship/adjoins",
+        "status": "known"
+      },
+      {
+        "id": "/m/02q7fl9|/film/film/release_date_s./film/film_regional_release_date/film_release_region|/m/09c7w0|known|known",
+        "source": "/m/02q7fl9",
+        "target": "/m/09c7w0",
+        "relation": "/film/film/release_date_s./film/film_regional_release_date/film_release_region",
+        "status": "known"
+      },
+      {
+        "id": "/m/085ccd|/film/film/country|/m/09c7w0|known|known",
+        "source": "/m/085ccd",
+        "target": "/m/09c7w0",
+        "relation": "/film/film/country",
+        "status": "known"
+      },
+      {
+        "id": "/m/09c7w0|/location/location/contains|/m/0rs6x|known|known",
+        "source": "/m/09c7w0",
+        "target": "/m/0rs6x",
+        "relation": "/location/location/contains",
+        "status": "known"
+      },
+      {
+        "id": "/m/09c7w0|/location/location/contains|/m/0rkkv|known|known",
+        "source": "/m/09c7w0",
+        "target": "/m/0rkkv",
+        "relation": "/location/location/contains",
+        "status": "known"
+      },
+      {
+        "id": "/m/059j1m|/people/person/nationality|/m/09c7w0|known|known",
+        "source": "/m/059j1m",
+        "target": "/m/09c7w0",
+        "relation": "/people/person/nationality",
+        "status": "known"
+      },
+      {
+        "id": "/m/02q3bb|/people/person/nationality|/m/09c7w0|known|known",
+        "source": "/m/02q3bb",
+        "target": "/m/09c7w0",
+        "relation": "/people/person/nationality",
+        "status": "known"
+      },
+      {
+        "id": "/m/04rwx|/organization/organization/headquarters./location/mailing_address/country|/m/09c7w0|known|known",
+        "source": "/m/04rwx",
+        "target": "/m/09c7w0",
+        "relation": "/organization/organization/headquarters./location/mailing_address/country",
+        "status": "known"
+      },
+      {
+        "id": "/m/09c7w0|/location/location/contains|/m/01c333|known|known",
+        "source": "/m/09c7w0",
+        "target": "/m/01c333",
+        "relation": "/location/location/contains",
+        "status": "known"
+      },
+      {
+        "id": "/m/0db94w|/film/film/release_date_s./film/film_regional_release_date/film_release_region|/m/09c7w0|known|known",
+        "source": "/m/0db94w",
+        "target": "/m/09c7w0",
+        "relation": "/film/film/release_date_s./film/film_regional_release_date/film_release_region",
+        "status": "known"
+      },
+      {
+        "id": "/m/02yvct|/film/film/release_date_s./film/film_regional_release_date/film_release_region|/m/09c7w0|known|known",
+        "source": "/m/02yvct",
+        "target": "/m/09c7w0",
+        "relation": "/film/film/release_date_s./film/film_regional_release_date/film_release_region",
+        "status": "known"
+      },
+      {
+        "id": "/m/06r3p2|/people/person/nationality|/m/09c7w0|known|known",
+        "source": "/m/06r3p2",
+        "target": "/m/09c7w0",
+        "relation": "/people/person/nationality",
+        "status": "known"
+      },
+      {
+        "id": "/m/09c7w0|/location/location/contains|/m/0_lr1|known|known",
+        "source": "/m/09c7w0",
+        "target": "/m/0_lr1",
+        "relation": "/location/location/contains",
+        "status": "known"
+      },
+      {
+        "id": "/m/01dq5z|/organization/organization/headquarters./location/mailing_address/country|/m/09c7w0|known|known",
+        "source": "/m/01dq5z",
+        "target": "/m/09c7w0",
+        "relation": "/organization/organization/headquarters./location/mailing_address/country",
+        "status": "known"
+      },
+      {
+        "id": "/m/05kj_|/base/biblioness/bibs_location/country|/m/09c7w0|known|known",
+        "source": "/m/05kj_",
+        "target": "/m/09c7w0",
+        "relation": "/base/biblioness/bibs_location/country",
+        "status": "known"
+      },
+      {
+        "id": "/m/09c7w0|/location/location/contains|/m/0778p|known|known",
+        "source": "/m/09c7w0",
+        "target": "/m/0778p",
+        "relation": "/location/location/contains",
+        "status": "known"
+      }
+    ]
+  },
+  "guided": {
+    "nodes": [
+      {
+        "id": "/m/01f8ld",
+        "label": "01f8ld",
+        "role": "context",
+        "clusterId": "cluster-33"
+      },
+      {
+        "id": "/m/01kb2j",
+        "label": "01kb2j",
+        "role": "context_tail",
+        "clusterId": "cluster-33"
+      },
+      {
+        "id": "/m/01x0yrt",
+        "label": "01x0yrt",
+        "role": "context",
+        "clusterId": "cluster-33"
+      },
+      {
+        "id": "/m/02vnmc9",
+        "label": "02vnmc9",
+        "role": "cluster_member",
+        "clusterId": "cluster-33"
+      },
+      {
+        "id": "/m/02x2jl_",
+        "label": "02x2jl_",
+        "role": "context",
+        "clusterId": "cluster-33"
+      },
+      {
+        "id": "/m/02h40lc",
+        "label": "02h40lc",
+        "role": "shared_tail",
+        "clusterId": "cluster-33"
+      },
+      {
+        "id": "/m/059t6d",
+        "label": "059t6d",
+        "role": "context",
+        "clusterId": "cluster-33"
+      },
+      {
+        "id": "/m/05h43ls",
+        "label": "05h43ls",
+        "role": "context",
+        "clusterId": "cluster-33"
+      },
+      {
+        "id": "/m/0k4bc",
+        "label": "0k4bc",
+        "role": "cluster_member",
+        "clusterId": "cluster-33"
+      },
+      {
+        "id": "/m/08y2fn",
+        "label": "08y2fn",
+        "role": "context",
+        "clusterId": "cluster-33"
+      },
+      {
+        "id": "/m/030k94",
+        "label": "030k94",
+        "role": "context",
+        "clusterId": "cluster-33"
+      },
+      {
+        "id": "/m/029j_",
+        "label": "029j_",
+        "role": "context_tail",
+        "clusterId": "cluster-33"
+      },
+      {
+        "id": "/m/0404j37",
+        "label": "0404j37",
+        "role": "context",
+        "clusterId": "cluster-33"
+      },
+      {
+        "id": "/m/084302",
+        "label": "084302",
+        "role": "cluster_member",
+        "clusterId": "cluster-33"
+      },
+      {
+        "id": "/m/02gqm3",
+        "label": "02gqm3",
+        "role": "cluster_member",
+        "clusterId": "cluster-33"
+      },
+      {
+        "id": "/m/02yplc",
+        "label": "02yplc",
+        "role": "context",
+        "clusterId": "cluster-33"
+      },
+      {
+        "id": "/m/02b6n9",
+        "label": "02b6n9",
+        "role": "cluster_member",
+        "clusterId": "cluster-33"
+      }
+    ],
+    "edges": [
+      {
+        "id": "/m/02gqm3|/film/film/language|/m/02h40lc|known|known",
+        "source": "/m/02gqm3",
+        "target": "/m/02h40lc",
+        "relation": "/film/film/language",
+        "status": "known",
+        "candidateId": null,
+        "role": "cluster_key"
+      },
+      {
+        "id": "/m/084302|/film/film/language|/m/02h40lc|known|known",
+        "source": "/m/084302",
+        "target": "/m/02h40lc",
+        "relation": "/film/film/language",
+        "status": "known",
+        "candidateId": null,
+        "role": "cluster_key"
+      },
+      {
+        "id": "/m/02vnmc9|/film/film/language|/m/02h40lc|known|known",
+        "source": "/m/02vnmc9",
+        "target": "/m/02h40lc",
+        "relation": "/film/film/language",
+        "status": "known",
+        "candidateId": null,
+        "role": "cluster_key"
+      },
+      {
+        "id": "/m/02b6n9|/film/film/language|/m/02h40lc|known|known",
+        "source": "/m/02b6n9",
+        "target": "/m/02h40lc",
+        "relation": "/film/film/language",
+        "status": "known",
+        "candidateId": null,
+        "role": "cluster_key"
+      },
+      {
+        "id": "/m/0k4bc|/film/film/language|/m/02h40lc|known|known",
+        "source": "/m/0k4bc",
+        "target": "/m/02h40lc",
+        "relation": "/film/film/language",
+        "status": "known",
+        "candidateId": null,
+        "role": "cluster_key"
+      },
+      {
+        "id": "/m/02b6n9|/award/award_winning_work/awards_won./award/award_honor/award_winner|/m/01kb2j|known|known",
+        "source": "/m/02b6n9",
+        "target": "/m/01kb2j",
+        "relation": "/award/award_winning_work/awards_won./award/award_honor/award_winner",
+        "status": "known",
+        "candidateId": null,
+        "role": "cluster_context"
+      },
+      {
+        "id": "/m/0k4bc|/film/film/release_date_s./film/film_regional_release_date/film_release_distribution_medium|/m/029j_|known|known",
+        "source": "/m/0k4bc",
+        "target": "/m/029j_",
+        "relation": "/film/film/release_date_s./film/film_regional_release_date/film_release_distribution_medium",
+        "status": "known",
+        "candidateId": null,
+        "role": "cluster_context"
+      },
+      {
+        "id": "/m/084302|/film/film/release_date_s./film/film_regional_release_date/film_release_distribution_medium|/m/029j_|llm_invalid|5e4b63dc874c9f14",
+        "source": "/m/084302",
+        "target": "/m/029j_",
+        "relation": "/film/film/release_date_s./film/film_regional_release_date/film_release_distribution_medium",
+        "status": "llm_invalid",
+        "candidateId": "5e4b63dc874c9f14",
+        "role": "generated_candidate"
+      },
+      {
+        "id": "/m/02vnmc9|/film/film/release_date_s./film/film_regional_release_date/film_release_distribution_medium|/m/029j_|llm_invalid|d7ab070ecaa20cb1",
+        "source": "/m/02vnmc9",
+        "target": "/m/029j_",
+        "relation": "/film/film/release_date_s./film/film_regional_release_date/film_release_distribution_medium",
+        "status": "llm_invalid",
+        "candidateId": "d7ab070ecaa20cb1",
+        "role": "generated_candidate"
+      },
+      {
+        "id": "/m/02gqm3|/film/film/release_date_s./film/film_regional_release_date/film_release_distribution_medium|/m/029j_|llm_invalid|d87f1129acde8aaa",
+        "source": "/m/02gqm3",
+        "target": "/m/029j_",
+        "relation": "/film/film/release_date_s./film/film_regional_release_date/film_release_distribution_medium",
+        "status": "llm_invalid",
+        "candidateId": "d87f1129acde8aaa",
+        "role": "generated_candidate"
+      },
+      {
+        "id": "/m/030k94|/tv/tv_program/languages|/m/02h40lc|known|known",
+        "source": "/m/030k94",
+        "target": "/m/02h40lc",
+        "relation": "/tv/tv_program/languages",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      },
+      {
+        "id": "/m/05h43ls|/film/film/distributors./film/film_film_distributor_relationship/film_distribution_medium|/m/029j_|known|known",
+        "source": "/m/05h43ls",
+        "target": "/m/029j_",
+        "relation": "/film/film/distributors./film/film_film_distributor_relationship/film_distribution_medium",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      },
+      {
+        "id": "/m/01x0yrt|/people/person/languages|/m/02h40lc|known|known",
+        "source": "/m/01x0yrt",
+        "target": "/m/02h40lc",
+        "relation": "/people/person/languages",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      },
+      {
+        "id": "/m/02x2jl_|/film/film/release_date_s./film/film_regional_release_date/film_release_distribution_medium|/m/029j_|known|known",
+        "source": "/m/02x2jl_",
+        "target": "/m/029j_",
+        "relation": "/film/film/release_date_s./film/film_regional_release_date/film_release_distribution_medium",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      },
+      {
+        "id": "/m/08y2fn|/tv/tv_program/languages|/m/02h40lc|known|known",
+        "source": "/m/08y2fn",
+        "target": "/m/02h40lc",
+        "relation": "/tv/tv_program/languages",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      },
+      {
+        "id": "/m/02yplc|/film/actor/dubbing_performances./film/dubbing_performance/language|/m/02h40lc|known|known",
+        "source": "/m/02yplc",
+        "target": "/m/02h40lc",
+        "relation": "/film/actor/dubbing_performances./film/dubbing_performance/language",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      },
+      {
+        "id": "/m/059t6d|/people/person/languages|/m/02h40lc|known|known",
+        "source": "/m/059t6d",
+        "target": "/m/02h40lc",
+        "relation": "/people/person/languages",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      },
+      {
+        "id": "/m/0404j37|/film/film/release_date_s./film/film_regional_release_date/film_release_distribution_medium|/m/029j_|known|known",
+        "source": "/m/0404j37",
+        "target": "/m/029j_",
+        "relation": "/film/film/release_date_s./film/film_regional_release_date/film_release_distribution_medium",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      },
+      {
+        "id": "/m/01f8ld|/award/award_nominee/award_nominations./award/award_nomination/nominated_for|/m/0404j37|known|known",
+        "source": "/m/01f8ld",
+        "target": "/m/0404j37",
+        "relation": "/award/award_nominee/award_nominations./award/award_nomination/nominated_for",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      }
+    ]
+  },
+  "candidates": [
+    {
+      "id": "5e4b63dc874c9f14",
+      "head": "/m/084302",
+      "relation": "/film/film/release_date_s./film/film_regional_release_date/film_release_distribution_medium",
+      "tail": "/m/029j_",
+      "distance": 0.6171451807022095,
+      "threshold": 0.6221308712235682,
+      "filterStatus": "accepted",
+      "llmDecision": "invalid",
+      "llmScore": 0.0,
+      "llmRationale": "Generated because /m/02b6n9, /m/02gqm3, /m/02vnmc9, /m/084302 share /film/film/language -> /m/02h40lc and exchange observed relation-tail evidence.",
+      "retrievedContext": [
+        "Head: /m/0404j37\nRelation: /film/film/release_date_s./film/film_regional_release_date/film_release_distribution_medium\nTail: /m/029j_",
+        "Head: /m/0k4bc\nRelation: /film/film/release_date_s./film/film_regional_release_date/film_release_distribution_medium\nTail: /m/029j_"
+      ],
+      "clusterId": "cluster-33",
+      "whyGenerated": "Generated because this head belongs to the selected cluster and the relation-tail pair appears in the same cluster context.",
+      "sharedRelation": "/film/film/language",
+      "sharedTail": "/m/02h40lc"
+    },
+    {
+      "id": "d7ab070ecaa20cb1",
+      "head": "/m/02vnmc9",
+      "relation": "/film/film/release_date_s./film/film_regional_release_date/film_release_distribution_medium",
+      "tail": "/m/029j_",
+      "distance": 0.29069676995277405,
+      "threshold": 0.6221308712235682,
+      "filterStatus": "accepted",
+      "llmDecision": "invalid",
+      "llmScore": 0.0,
+      "llmRationale": "Generated because /m/02b6n9, /m/02gqm3, /m/02vnmc9, /m/084302 share /film/film/language -> /m/02h40lc and exchange observed relation-tail evidence.",
+      "retrievedContext": [
+        "Head: /m/0404j37\nRelation: /film/film/release_date_s./film/film_regional_release_date/film_release_distribution_medium\nTail: /m/029j_",
+        "Head: /m/0k4bc\nRelation: /film/film/release_date_s./film/film_regional_release_date/film_release_distribution_medium\nTail: /m/029j_"
+      ],
+      "clusterId": "cluster-33",
+      "whyGenerated": "Generated because this head belongs to the selected cluster and the relation-tail pair appears in the same cluster context.",
+      "sharedRelation": "/film/film/language",
+      "sharedTail": "/m/02h40lc"
+    },
+    {
+      "id": "d87f1129acde8aaa",
+      "head": "/m/02gqm3",
+      "relation": "/film/film/release_date_s./film/film_regional_release_date/film_release_distribution_medium",
+      "tail": "/m/029j_",
+      "distance": 0.29729971289634705,
+      "threshold": 0.6221308712235682,
+      "filterStatus": "accepted",
+      "llmDecision": "invalid",
+      "llmScore": 0.0,
+      "llmRationale": "Generated because /m/02b6n9, /m/02gqm3, /m/02vnmc9, /m/084302 share /film/film/language -> /m/02h40lc and exchange observed relation-tail evidence.",
+      "retrievedContext": [
+        "Head: /m/0k4bc\nRelation: /film/film/release_date_s./film/film_regional_release_date/film_release_distribution_medium\nTail: /m/029j_",
+        "Head: /m/0404j37\nRelation: /film/film/release_date_s./film/film_regional_release_date/film_release_distribution_medium\nTail: /m/029j_"
+      ],
+      "clusterId": "cluster-33",
+      "whyGenerated": "Generated because this head belongs to the selected cluster and the relation-tail pair appears in the same cluster context.",
+      "sharedRelation": "/film/film/language",
+      "sharedTail": "/m/02h40lc"
+    },
+    {
+      "id": "bae9d5f3bccc6b61",
+      "head": "/m/06lj1m",
+      "relation": "/tv/tv_producer/programs_produced./tv/tv_producer_term/program",
+      "tail": "/m/0gvsh7l",
+      "distance": 0.1478513777,
+      "threshold": null,
+      "filterStatus": "accepted",
+      "llmDecision": null,
+      "llmScore": null,
+      "llmRationale": null,
+      "retrievedContext": [],
+      "clusterId": "cluster-89",
+      "whyGenerated": null,
+      "sharedRelation": "/people/person/spouse_s./people/marriage/type_of_union",
+      "sharedTail": "/m/04ztj"
+    },
+    {
+      "id": "df280b9f7015f061",
+      "head": "/m/0lx2l",
+      "relation": "/tv/tv_producer/programs_produced./tv/tv_producer_term/program",
+      "tail": "/m/0gvsh7l",
+      "distance": 0.2269711792,
+      "threshold": null,
+      "filterStatus": "accepted",
+      "llmDecision": null,
+      "llmScore": null,
+      "llmRationale": null,
+      "retrievedContext": [],
+      "clusterId": "cluster-89",
+      "whyGenerated": null,
+      "sharedRelation": "/people/person/spouse_s./people/marriage/type_of_union",
+      "sharedTail": "/m/04ztj"
+    },
+    {
+      "id": "ae70d96fd8b05702",
+      "head": "/m/01jz6x",
+      "relation": "/tv/tv_producer/programs_produced./tv/tv_producer_term/program",
+      "tail": "/m/0gvsh7l",
+      "distance": 0.356049329,
+      "threshold": null,
+      "filterStatus": "accepted",
+      "llmDecision": null,
+      "llmScore": null,
+      "llmRationale": null,
+      "retrievedContext": [],
+      "clusterId": "cluster-89",
+      "whyGenerated": null,
+      "sharedRelation": "/people/person/spouse_s./people/marriage/type_of_union",
+      "sharedTail": "/m/04ztj"
+    },
+    {
+      "id": "05633c748ac51743",
+      "head": "/m/02825cv",
+      "relation": "/award/award_winning_work/awards_won./award/award_honor/award_winner",
+      "tail": "/m/04q5zw",
+      "distance": 0.3750878274,
+      "threshold": null,
+      "filterStatus": "accepted",
+      "llmDecision": null,
+      "llmScore": null,
+      "llmRationale": null,
+      "retrievedContext": [],
+      "clusterId": "cluster-42",
+      "whyGenerated": null,
+      "sharedRelation": "/film/film/release_date_s./film/film_regional_release_date/film_release_region",
+      "sharedTail": "/m/0154j"
+    },
+    {
+      "id": "b76feddd2f4f9004",
+      "head": "/m/045n3p",
+      "relation": "/tv/tv_producer/programs_produced./tv/tv_producer_term/program",
+      "tail": "/m/0gvsh7l",
+      "distance": 0.4202192128,
+      "threshold": null,
+      "filterStatus": "accepted",
+      "llmDecision": null,
+      "llmScore": null,
+      "llmRationale": null,
+      "retrievedContext": [],
+      "clusterId": "cluster-89",
+      "whyGenerated": null,
+      "sharedRelation": "/people/person/spouse_s./people/marriage/type_of_union",
+      "sharedTail": "/m/04ztj"
+    },
+    {
+      "id": "3259a9572a115ff3",
+      "head": "/m/030dx5",
+      "relation": "/tv/tv_producer/programs_produced./tv/tv_producer_term/program",
+      "tail": "/m/0gvsh7l",
+      "distance": 0.4310528338,
+      "threshold": null,
+      "filterStatus": "accepted",
+      "llmDecision": null,
+      "llmScore": null,
+      "llmRationale": null,
+      "retrievedContext": [],
+      "clusterId": "cluster-89",
+      "whyGenerated": null,
+      "sharedRelation": "/people/person/spouse_s./people/marriage/type_of_union",
+      "sharedTail": "/m/04ztj"
+    },
+    {
+      "id": "b700212078101e0f",
+      "head": "/m/0404j37",
+      "relation": "/film/film/language",
+      "tail": "/m/02h40lc",
+      "distance": 0.4422695339,
+      "threshold": null,
+      "filterStatus": "accepted",
+      "llmDecision": null,
+      "llmScore": null,
+      "llmRationale": null,
+      "retrievedContext": [],
+      "clusterId": "cluster-41",
+      "whyGenerated": null,
+      "sharedRelation": "/film/film/release_date_s./film/film_regional_release_date/film_release_distribution_medium",
+      "sharedTail": "/m/029j_"
+    },
+    {
+      "id": "9b7d9f3ab3486d8d",
+      "head": "/m/098sx",
+      "relation": "/people/person/place_of_birth",
+      "tail": "/m/01zrs_",
+      "distance": 0.447204262,
+      "threshold": null,
+      "filterStatus": "accepted",
+      "llmDecision": null,
+      "llmScore": null,
+      "llmRationale": null,
+      "retrievedContext": [],
+      "clusterId": "cluster-86",
+      "whyGenerated": null,
+      "sharedRelation": "/people/person/profession",
+      "sharedTail": "/m/0kyk"
+    },
+    {
+      "id": "cbe2b5a5577d277a",
+      "head": "/m/05cv8",
+      "relation": "/tv/tv_producer/programs_produced./tv/tv_producer_term/program",
+      "tail": "/m/0gvsh7l",
+      "distance": 0.4539838135,
+      "threshold": null,
+      "filterStatus": "accepted",
+      "llmDecision": null,
+      "llmScore": null,
+      "llmRationale": null,
+      "retrievedContext": [],
+      "clusterId": "cluster-89",
+      "whyGenerated": null,
+      "sharedRelation": "/people/person/spouse_s./people/marriage/type_of_union",
+      "sharedTail": "/m/04ztj"
+    },
+    {
+      "id": "2c63120d813318aa",
+      "head": "/m/06s1qy",
+      "relation": "/film/director/film",
+      "tail": "/m/07cw4",
+      "distance": 0.4661869109,
+      "threshold": null,
+      "filterStatus": "accepted",
+      "llmDecision": null,
+      "llmScore": null,
+      "llmRationale": null,
+      "retrievedContext": [],
+      "clusterId": "cluster-5",
+      "whyGenerated": null,
+      "sharedRelation": "/award/award_nominee/award_nominations./award/award_nomination/award",
+      "sharedTail": "/m/04dn09n"
+    },
+    {
+      "id": "f3153ba192924660",
+      "head": "/m/01yndb",
+      "relation": "/people/person/places_lived./people/place_lived/location",
+      "tail": "/m/019fh",
+      "distance": 0.5218375325,
+      "threshold": null,
+      "filterStatus": "accepted",
+      "llmDecision": null,
+      "llmScore": null,
+      "llmRationale": null,
+      "retrievedContext": [],
+      "clusterId": "cluster-83",
+      "whyGenerated": null,
+      "sharedRelation": "/people/person/profession",
+      "sharedTail": "/m/09jwl"
+    }
+  ],
+  "selectedCandidateId": "5e4b63dc874c9f14"
+}

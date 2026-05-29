@@ -1,0 +1,36 @@
+{
+  "datasets": [
+    {
+      "datasetId": "codexM",
+      "label": "CoDEx-M",
+      "static": false,
+      "candidates": 14,
+      "overviewNodes": 19,
+      "guidedNodes": 26
+    },
+    {
+      "datasetId": "fb15k237",
+      "label": "FB15K-237",
+      "static": false,
+      "candidates": 14,
+      "overviewNodes": 19,
+      "guidedNodes": 17
+    },
+    {
+      "datasetId": "wn18rr",
+      "label": "WN18RR",
+      "static": false,
+      "candidates": 0,
+      "overviewNodes": 10,
+      "guidedNodes": 6
+    },
+    {
+      "datasetId": "covidFact",
+      "label": "COVID-Fact",
+      "static": true,
+      "candidates": 3,
+      "overviewNodes": 7,
+      "guidedNodes": 8
+    }
+  ]
+}

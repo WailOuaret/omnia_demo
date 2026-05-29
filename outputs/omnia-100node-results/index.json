@@ -1,0 +1,124 @@
+{
+  "nodeLimit": 100,
+  "edgeLimit": 200,
+  "datasets": {
+    "codexM": {
+      "file": "outputs\\omnia-100node-results\\codexM_100node.json",
+      "sessionId": "244c55beea1b",
+      "runtimeSec": 66.87,
+      "overview": {
+        "nodes": 60,
+        "edges": 59
+      },
+      "guided": {
+        "nodes": 28,
+        "edges": 31,
+        "clusters": 20,
+        "candidates": 4
+      },
+      "pipelineSummary": {
+        "known_triples": 1200,
+        "reference_triples": 1500,
+        "completed_triples": 1200,
+        "accepted_additions": 0,
+        "rejected_candidates": 24,
+        "unresolved_candidates": 0,
+        "recovered_true_missing": 0,
+        "novel_not_in_reference": 0,
+        "total": 0,
+        "accepted": 0,
+        "rejected": 0,
+        "uncertain": 0,
+        "corrected": 0,
+        "llm_overridden": 0,
+        "not_enough_evidence": 0,
+        "feedback_total": 0,
+        "user_accepted": 0,
+        "user_rejected": 0,
+        "user_uncertain": 0,
+        "user_corrected": 0,
+        "agreement_rate": 0.0
+      }
+    },
+    "fb15k237": {
+      "file": "outputs\\omnia-100node-results\\fb15k237_100node.json",
+      "sessionId": "e29afdbb361b",
+      "runtimeSec": 64.65,
+      "overview": {
+        "nodes": 45,
+        "edges": 44
+      },
+      "guided": {
+        "nodes": 17,
+        "edges": 19,
+        "clusters": 20,
+        "candidates": 3
+      },
+      "pipelineSummary": {
+        "known_triples": 1200,
+        "reference_triples": 1500,
+        "completed_triples": 1200,
+        "accepted_additions": 0,
+        "rejected_candidates": 24,
+        "unresolved_candidates": 0,
+        "recovered_true_missing": 0,
+        "novel_not_in_reference": 0,
+        "total": 0,
+        "accepted": 0,
+        "rejected": 0,
+        "uncertain": 0,
+        "corrected": 0,
+        "llm_overridden": 0,
+        "not_enough_evidence": 0,
+        "feedback_total": 0,
+        "user_accepted": 0,
+        "user_rejected": 0,
+        "user_uncertain": 0,
+        "user_corrected": 0,
+        "agreement_rate": 0.0
+      }
+    },
+    "wn18rr": {
+      "file": "outputs\\omnia-100node-results\\wn18rr_100node.json",
+      "sessionId": "b11c8835d2df",
+      "runtimeSec": 15.75,
+      "overview": {
+        "nodes": 10,
+        "edges": 9
+      },
+      "guided": {
+        "nodes": 6,
+        "edges": 5,
+        "clusters": 20,
+        "candidates": 0
+      },
+      "pipelineSummary": {
+        "known_triples": 1200,
+        "reference_triples": 1500,
+        "completed_triples": 1200,
+        "accepted_additions": 0,
+        "rejected_candidates": 1,
+        "unresolved_candidates": 0,
+        "recovered_true_missing": 0,
+        "novel_not_in_reference": 0,
+        "total": 0,
+        "accepted": 0,
+        "rejected": 0,
+        "uncertain": 0,
+        "corrected": 0,
+        "llm_overridden": 0,
+        "not_enough_evidence": 0,
+        "feedback_total": 0,
+        "user_accepted": 0,
+        "user_rejected": 0,
+        "user_uncertain": 0,
+        "user_corrected": 0,
+        "agreement_rate": 0.0
+      }
+    }
+  },
+  "covidFact": {
+    "file": "outputs/omnia-100node-results/covidFact_static_demo.json",
+    "note": "Static guided scenario only (no live KG backend converter)."
+  }
+}

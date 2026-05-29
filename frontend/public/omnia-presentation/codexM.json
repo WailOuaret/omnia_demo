@@ -1,0 +1,922 @@
+{
+  "datasetId": "codexM",
+  "label": "CoDEx-M",
+  "shortName": "CoDEx-M",
+  "recommendedMode": "sentence-rag",
+  "publicStatus": "public",
+  "static": false,
+  "paperStats": {
+    "entities": 16759,
+    "relations": 49,
+    "triples": 60000
+  },
+  "sample": {
+    "knownTriples": 1200,
+    "missingTriples": 300,
+    "rowCount": 206205,
+    "sampleProportion": 0.8
+  },
+  "metrics": {
+    "generatedCandidates": 1405,
+    "filterQueueCount": 630,
+    "filteringEnabled": true,
+    "filteringModel": "TransE",
+    "threshold": 0.5357395193373873,
+    "filteringAccepted": 100,
+    "filteringRejected": 530,
+    "llmAvailable": false,
+    "llmStrategyLabel": "RAG",
+    "llmTopK": 2,
+    "llmAccepted": 0,
+    "llmRejected": 24,
+    "llmUnresolved": 0
+  },
+  "cluster": {
+    "sharedRelation": "P106",
+    "sharedTail": "Q2526255",
+    "members": [
+      "Q10444417",
+      "Q111164",
+      "Q16397",
+      "Q205707",
+      "Q233365",
+      "Q51583"
+    ],
+    "clusterKey": "(P106, Q2526255)"
+  },
+  "overview": {
+    "nodes": [
+      {
+        "id": "Q946528",
+        "label": "Q946528"
+      },
+      {
+        "id": "Q219060",
+        "label": "Q219060"
+      },
+      {
+        "id": "Q1397375",
+        "label": "Q1397375"
+      },
+      {
+        "id": "Q193338",
+        "label": "Q193338"
+      },
+      {
+        "id": "Q272225",
+        "label": "Q272225"
+      },
+      {
+        "id": "Q267406",
+        "label": "Q267406"
+      },
+      {
+        "id": "Q75546",
+        "label": "Q75546"
+      },
+      {
+        "id": "Q24356",
+        "label": "Q24356"
+      },
+      {
+        "id": "Q254138",
+        "label": "Q254138"
+      },
+      {
+        "id": "Q272994",
+        "label": "Q272994"
+      },
+      {
+        "id": "Q44857",
+        "label": "Q44857"
+      },
+      {
+        "id": "Q312394",
+        "label": "Q312394"
+      },
+      {
+        "id": "Q1383002",
+        "label": "Q1383002"
+      },
+      {
+        "id": "Q347436",
+        "label": "Q347436"
+      },
+      {
+        "id": "Q349799",
+        "label": "Q349799"
+      },
+      {
+        "id": "Q155700",
+        "label": "Q155700"
+      },
+      {
+        "id": "Q179282",
+        "label": "Q179282"
+      },
+      {
+        "id": "Q30",
+        "label": "Q30"
+      },
+      {
+        "id": "Q902",
+        "label": "Q902"
+      }
+    ],
+    "edges": [
+      {
+        "id": "Q946528|P27|Q30|known|known",
+        "source": "Q946528",
+        "target": "Q30",
+        "relation": "P27",
+        "status": "known"
+      },
+      {
+        "id": "Q193338|P27|Q30|known|known",
+        "source": "Q193338",
+        "target": "Q30",
+        "relation": "P27",
+        "status": "known"
+      },
+      {
+        "id": "Q30|P530|Q902|known|known",
+        "source": "Q30",
+        "target": "Q902",
+        "relation": "P530",
+        "status": "known"
+      },
+      {
+        "id": "Q44857|P27|Q30|known|known",
+        "source": "Q44857",
+        "target": "Q30",
+        "relation": "P27",
+        "status": "known"
+      },
+      {
+        "id": "Q1397375|P27|Q30|known|known",
+        "source": "Q1397375",
+        "target": "Q30",
+        "relation": "P27",
+        "status": "known"
+      },
+      {
+        "id": "Q219060|P530|Q30|known|known",
+        "source": "Q219060",
+        "target": "Q30",
+        "relation": "P530",
+        "status": "known"
+      },
+      {
+        "id": "Q155700|P27|Q30|known|known",
+        "source": "Q155700",
+        "target": "Q30",
+        "relation": "P27",
+        "status": "known"
+      },
+      {
+        "id": "Q312394|P495|Q30|known|known",
+        "source": "Q312394",
+        "target": "Q30",
+        "relation": "P495",
+        "status": "known"
+      },
+      {
+        "id": "Q349799|P27|Q30|known|known",
+        "source": "Q349799",
+        "target": "Q30",
+        "relation": "P27",
+        "status": "known"
+      },
+      {
+        "id": "Q254138|P495|Q30|known|known",
+        "source": "Q254138",
+        "target": "Q30",
+        "relation": "P495",
+        "status": "known"
+      },
+      {
+        "id": "Q272994|P27|Q30|known|known",
+        "source": "Q272994",
+        "target": "Q30",
+        "relation": "P27",
+        "status": "known"
+      },
+      {
+        "id": "Q75546|P495|Q30|known|known",
+        "source": "Q75546",
+        "target": "Q30",
+        "relation": "P495",
+        "status": "known"
+      },
+      {
+        "id": "Q1383002|P27|Q30|known|known",
+        "source": "Q1383002",
+        "target": "Q30",
+        "relation": "P27",
+        "status": "known"
+      },
+      {
+        "id": "Q179282|P27|Q30|known|known",
+        "source": "Q179282",
+        "target": "Q30",
+        "relation": "P27",
+        "status": "known"
+      },
+      {
+        "id": "Q347436|P27|Q30|known|known",
+        "source": "Q347436",
+        "target": "Q30",
+        "relation": "P27",
+        "status": "known"
+      },
+      {
+        "id": "Q272225|P27|Q30|known|known",
+        "source": "Q272225",
+        "target": "Q30",
+        "relation": "P27",
+        "status": "known"
+      },
+      {
+        "id": "Q24356|P27|Q30|known|known",
+        "source": "Q24356",
+        "target": "Q30",
+        "relation": "P27",
+        "status": "known"
+      },
+      {
+        "id": "Q267406|P27|Q30|known|known",
+        "source": "Q267406",
+        "target": "Q30",
+        "relation": "P27",
+        "status": "known"
+      }
+    ]
+  },
+  "guided": {
+    "nodes": [
+      {
+        "id": "Q319527",
+        "label": "Q319527",
+        "role": "context",
+        "clusterId": "cluster-31"
+      },
+      {
+        "id": "Q10444417",
+        "label": "Q10444417",
+        "role": "cluster_member",
+        "clusterId": "cluster-31"
+      },
+      {
+        "id": "Q111164",
+        "label": "Q111164",
+        "role": "cluster_member",
+        "clusterId": "cluster-31"
+      },
+      {
+        "id": "Q3391743",
+        "label": "Q3391743",
+        "role": "context_tail",
+        "clusterId": "cluster-31"
+      },
+      {
+        "id": "Q244975",
+        "label": "Q244975",
+        "role": "context",
+        "clusterId": "cluster-31"
+      },
+      {
+        "id": "Q37459",
+        "label": "Q37459",
+        "role": "context",
+        "clusterId": "cluster-31"
+      },
+      {
+        "id": "Q44077",
+        "label": "Q44077",
+        "role": "context",
+        "clusterId": "cluster-31"
+      },
+      {
+        "id": "Q206439",
+        "label": "Q206439",
+        "role": "context",
+        "clusterId": "cluster-31"
+      },
+      {
+        "id": "Q180011",
+        "label": "Q180011",
+        "role": "context",
+        "clusterId": "cluster-31"
+      },
+      {
+        "id": "Q229220",
+        "label": "Q229220",
+        "role": "context",
+        "clusterId": "cluster-31"
+      },
+      {
+        "id": "Q188111",
+        "label": "Q188111",
+        "role": "context",
+        "clusterId": "cluster-31"
+      },
+      {
+        "id": "Q10800557",
+        "label": "Q10800557",
+        "role": "context_tail",
+        "clusterId": "cluster-31"
+      },
+      {
+        "id": "Q229716",
+        "label": "Q229716",
+        "role": "context",
+        "clusterId": "cluster-31"
+      },
+      {
+        "id": "Q233365",
+        "label": "Q233365",
+        "role": "cluster_member",
+        "clusterId": "cluster-31"
+      },
+      {
+        "id": "Q433044",
+        "label": "Q433044",
+        "role": "context",
+        "clusterId": "cluster-31"
+      },
+      {
+        "id": "Q105221",
+        "label": "Q105221",
+        "role": "context",
+        "clusterId": "cluster-31"
+      },
+      {
+        "id": "Q2526255",
+        "label": "Q2526255",
+        "role": "shared_tail",
+        "clusterId": "cluster-31"
+      },
+      {
+        "id": "Q1291679",
+        "label": "Q1291679",
+        "role": "context",
+        "clusterId": "cluster-31"
+      },
+      {
+        "id": "Q205707",
+        "label": "Q205707",
+        "role": "cluster_member",
+        "clusterId": "cluster-31"
+      },
+      {
+        "id": "Q51583",
+        "label": "Q51583",
+        "role": "cluster_member",
+        "clusterId": "cluster-31"
+      },
+      {
+        "id": "Q210741",
+        "label": "Q210741",
+        "role": "context",
+        "clusterId": "cluster-31"
+      },
+      {
+        "id": "Q116462",
+        "label": "Q116462",
+        "role": "context",
+        "clusterId": "cluster-31"
+      },
+      {
+        "id": "Q371932",
+        "label": "Q371932",
+        "role": "context",
+        "clusterId": "cluster-31"
+      },
+      {
+        "id": "Q1057893",
+        "label": "Q1057893",
+        "role": "context",
+        "clusterId": "cluster-31"
+      },
+      {
+        "id": "Q72717",
+        "label": "Q72717",
+        "role": "context",
+        "clusterId": "cluster-31"
+      },
+      {
+        "id": "Q23359",
+        "label": "Q23359",
+        "role": "context",
+        "clusterId": "cluster-31"
+      }
+    ],
+    "edges": [
+      {
+        "id": "Q51583|P106|Q2526255|known|known",
+        "source": "Q51583",
+        "target": "Q2526255",
+        "relation": "P106",
+        "status": "known",
+        "candidateId": null,
+        "role": "cluster_key"
+      },
+      {
+        "id": "Q205707|P106|Q2526255|known|known",
+        "source": "Q205707",
+        "target": "Q2526255",
+        "relation": "P106",
+        "status": "known",
+        "candidateId": null,
+        "role": "cluster_key"
+      },
+      {
+        "id": "Q10444417|P106|Q2526255|known|known",
+        "source": "Q10444417",
+        "target": "Q2526255",
+        "relation": "P106",
+        "status": "known",
+        "candidateId": null,
+        "role": "cluster_key"
+      },
+      {
+        "id": "Q111164|P106|Q2526255|known|known",
+        "source": "Q111164",
+        "target": "Q2526255",
+        "relation": "P106",
+        "status": "known",
+        "candidateId": null,
+        "role": "cluster_key"
+      },
+      {
+        "id": "Q233365|P106|Q2526255|known|known",
+        "source": "Q233365",
+        "target": "Q2526255",
+        "relation": "P106",
+        "status": "known",
+        "candidateId": null,
+        "role": "cluster_key"
+      },
+      {
+        "id": "Q205707|P106|Q10800557|known|known",
+        "source": "Q205707",
+        "target": "Q10800557",
+        "relation": "P106",
+        "status": "known",
+        "candidateId": null,
+        "role": "cluster_context"
+      },
+      {
+        "id": "Q10444417|P106|Q3391743|known|known",
+        "source": "Q10444417",
+        "target": "Q3391743",
+        "relation": "P106",
+        "status": "known",
+        "candidateId": null,
+        "role": "cluster_context"
+      },
+      {
+        "id": "Q233365|P106|Q10800557|llm_invalid|ccb7a85a84fb4b94",
+        "source": "Q233365",
+        "target": "Q10800557",
+        "relation": "P106",
+        "status": "llm_invalid",
+        "candidateId": "ccb7a85a84fb4b94",
+        "role": "generated_candidate"
+      },
+      {
+        "id": "Q111164|P106|Q10800557|llm_invalid|d119502eb93536a8",
+        "source": "Q111164",
+        "target": "Q10800557",
+        "relation": "P106",
+        "status": "llm_invalid",
+        "candidateId": "d119502eb93536a8",
+        "role": "generated_candidate"
+      },
+      {
+        "id": "Q51583|P106|Q10800557|llm_invalid|e6553bbe2b314263",
+        "source": "Q51583",
+        "target": "Q10800557",
+        "relation": "P106",
+        "status": "llm_invalid",
+        "candidateId": "e6553bbe2b314263",
+        "role": "generated_candidate"
+      },
+      {
+        "id": "Q44077|P106|Q10800557|known|known",
+        "source": "Q44077",
+        "target": "Q10800557",
+        "relation": "P106",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      },
+      {
+        "id": "Q433044|P106|Q10800557|known|known",
+        "source": "Q433044",
+        "target": "Q10800557",
+        "relation": "P106",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      },
+      {
+        "id": "Q1057893|P106|Q10800557|known|known",
+        "source": "Q1057893",
+        "target": "Q10800557",
+        "relation": "P106",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      },
+      {
+        "id": "Q229220|P106|Q10800557|known|known",
+        "source": "Q229220",
+        "target": "Q10800557",
+        "relation": "P106",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      },
+      {
+        "id": "Q116462|P106|Q10800557|known|known",
+        "source": "Q116462",
+        "target": "Q10800557",
+        "relation": "P106",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      },
+      {
+        "id": "Q210741|P106|Q10800557|known|known",
+        "source": "Q210741",
+        "target": "Q10800557",
+        "relation": "P106",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      },
+      {
+        "id": "Q206439|P106|Q10800557|known|known",
+        "source": "Q206439",
+        "target": "Q10800557",
+        "relation": "P106",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      },
+      {
+        "id": "Q23359|P106|Q10800557|known|known",
+        "source": "Q23359",
+        "target": "Q10800557",
+        "relation": "P106",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      },
+      {
+        "id": "Q72717|P106|Q10800557|known|known",
+        "source": "Q72717",
+        "target": "Q10800557",
+        "relation": "P106",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      },
+      {
+        "id": "Q180011|P106|Q10800557|known|known",
+        "source": "Q180011",
+        "target": "Q10800557",
+        "relation": "P106",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      },
+      {
+        "id": "Q319527|P106|Q10800557|known|known",
+        "source": "Q319527",
+        "target": "Q10800557",
+        "relation": "P106",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      },
+      {
+        "id": "Q105221|P106|Q10800557|known|known",
+        "source": "Q105221",
+        "target": "Q10800557",
+        "relation": "P106",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      },
+      {
+        "id": "Q371932|P106|Q10800557|known|known",
+        "source": "Q371932",
+        "target": "Q10800557",
+        "relation": "P106",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      },
+      {
+        "id": "Q188111|P106|Q10800557|known|known",
+        "source": "Q188111",
+        "target": "Q10800557",
+        "relation": "P106",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      },
+      {
+        "id": "Q37459|P106|Q10800557|known|known",
+        "source": "Q37459",
+        "target": "Q10800557",
+        "relation": "P106",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      },
+      {
+        "id": "Q1291679|P106|Q3391743|known|known",
+        "source": "Q1291679",
+        "target": "Q3391743",
+        "relation": "P106",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      },
+      {
+        "id": "Q229716|P106|Q10800557|known|known",
+        "source": "Q229716",
+        "target": "Q10800557",
+        "relation": "P106",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      },
+      {
+        "id": "Q244975|P161|Q44077|known|known",
+        "source": "Q244975",
+        "target": "Q44077",
+        "relation": "P161",
+        "status": "known",
+        "candidateId": null,
+        "role": "context"
+      }
+    ]
+  },
+  "candidates": [
+    {
+      "id": "ac9bdce4e78fde09",
+      "head": "Q16397",
+      "relation": "P106",
+      "tail": "Q10800557",
+      "distance": 0.42580971121788025,
+      "threshold": 0.5357395193373873,
+      "filterStatus": "accepted",
+      "llmDecision": "invalid",
+      "llmScore": 0.0,
+      "llmRationale": "Generated because Q10444417, Q111164, Q16397, Q205707 share P106 -> Q2526255 and exchange observed relation-tail evidence.",
+      "retrievedContext": [
+        "Head: Q371932\nRelation: P106\nTail: Q10800557",
+        "Head: Q157359\nRelation: P106\nTail: Q16031530"
+      ],
+      "clusterId": "cluster-31",
+      "whyGenerated": "Generated because this head belongs to the selected cluster and the relation-tail pair appears in the same cluster context.",
+      "sharedRelation": "P106",
+      "sharedTail": "Q2526255"
+    },
+    {
+      "id": "ccb7a85a84fb4b94",
+      "head": "Q233365",
+      "relation": "P106",
+      "tail": "Q10800557",
+      "distance": 0.48302754759788513,
+      "threshold": 0.5357395193373873,
+      "filterStatus": "accepted",
+      "llmDecision": "invalid",
+      "llmScore": 0.0,
+      "llmRationale": "Generated because Q10444417, Q111164, Q16397, Q205707 share P106 -> Q2526255 and exchange observed relation-tail evidence.",
+      "retrievedContext": [
+        "Head: Q23359\nRelation: P106\nTail: Q10800557",
+        "Head: Q229716\nRelation: P106\nTail: Q10800557"
+      ],
+      "clusterId": "cluster-31",
+      "whyGenerated": "Generated because this head belongs to the selected cluster and the relation-tail pair appears in the same cluster context.",
+      "sharedRelation": "P106",
+      "sharedTail": "Q2526255"
+    },
+    {
+      "id": "d119502eb93536a8",
+      "head": "Q111164",
+      "relation": "P106",
+      "tail": "Q10800557",
+      "distance": 0.5095332860946655,
+      "threshold": 0.5357395193373873,
+      "filterStatus": "accepted",
+      "llmDecision": "invalid",
+      "llmScore": 0.0,
+      "llmRationale": "Generated because Q10444417, Q111164, Q16397, Q205707 share P106 -> Q2526255 and exchange observed relation-tail evidence.",
+      "retrievedContext": [
+        "Head: Q116462\nRelation: P106\nTail: Q10800557",
+        "Head: Q111164\nRelation: P106\nTail: Q2526255"
+      ],
+      "clusterId": "cluster-31",
+      "whyGenerated": "Generated because this head belongs to the selected cluster and the relation-tail pair appears in the same cluster context.",
+      "sharedRelation": "P106",
+      "sharedTail": "Q2526255"
+    },
+    {
+      "id": "e6553bbe2b314263",
+      "head": "Q51583",
+      "relation": "P106",
+      "tail": "Q10800557",
+      "distance": 0.48936015367507935,
+      "threshold": 0.5357395193373873,
+      "filterStatus": "accepted",
+      "llmDecision": "invalid",
+      "llmScore": 0.0,
+      "llmRationale": "Generated because Q10444417, Q111164, Q16397, Q205707 share P106 -> Q2526255 and exchange observed relation-tail evidence.",
+      "retrievedContext": [
+        "Head: Q519273\nRelation: P106\nTail: Q55960555",
+        "Head: Q371932\nRelation: P106\nTail: Q10800557"
+      ],
+      "clusterId": "cluster-31",
+      "whyGenerated": "Generated because this head belongs to the selected cluster and the relation-tail pair appears in the same cluster context.",
+      "sharedRelation": "P106",
+      "sharedTail": "Q2526255"
+    },
+    {
+      "id": "6f95e86997aeeed7",
+      "head": "Q367634",
+      "relation": "P106",
+      "tail": "Q13474373",
+      "distance": 0.2160270661,
+      "threshold": null,
+      "filterStatus": "accepted",
+      "llmDecision": null,
+      "llmScore": null,
+      "llmRationale": null,
+      "retrievedContext": [],
+      "clusterId": "cluster-127",
+      "whyGenerated": null,
+      "sharedRelation": "P27",
+      "sharedTail": "Q30"
+    },
+    {
+      "id": "bd6ad3036bc3aebe",
+      "head": "Q371932",
+      "relation": "P106",
+      "tail": "Q2526255",
+      "distance": 0.2324695587,
+      "threshold": null,
+      "filterStatus": "accepted",
+      "llmDecision": null,
+      "llmScore": null,
+      "llmRationale": null,
+      "retrievedContext": [],
+      "clusterId": "cluster-9",
+      "whyGenerated": null,
+      "sharedRelation": "P106",
+      "sharedTail": "Q10800557"
+    },
+    {
+      "id": "74eba605f002ce69",
+      "head": "Q3438272",
+      "relation": "P106",
+      "tail": "Q2252262",
+      "distance": 0.2401779145,
+      "threshold": null,
+      "filterStatus": "accepted",
+      "llmDecision": null,
+      "llmScore": null,
+      "llmRationale": null,
+      "retrievedContext": [],
+      "clusterId": "cluster-127",
+      "whyGenerated": null,
+      "sharedRelation": "P27",
+      "sharedTail": "Q30"
+    },
+    {
+      "id": "4869bd9ca54b98db",
+      "head": "Q11153",
+      "relation": "P106",
+      "tail": "Q13474373",
+      "distance": 0.2518849969,
+      "threshold": null,
+      "filterStatus": "accepted",
+      "llmDecision": null,
+      "llmScore": null,
+      "llmRationale": null,
+      "retrievedContext": [],
+      "clusterId": "cluster-127",
+      "whyGenerated": null,
+      "sharedRelation": "P27",
+      "sharedTail": "Q30"
+    },
+    {
+      "id": "14045fb8e7b8d324",
+      "head": "Q311750",
+      "relation": "P106",
+      "tail": "Q13474373",
+      "distance": 0.2892183065,
+      "threshold": null,
+      "filterStatus": "accepted",
+      "llmDecision": null,
+      "llmScore": null,
+      "llmRationale": null,
+      "retrievedContext": [],
+      "clusterId": "cluster-127",
+      "whyGenerated": null,
+      "sharedRelation": "P27",
+      "sharedTail": "Q30"
+    },
+    {
+      "id": "57c726257f1ce051",
+      "head": "Q188111",
+      "relation": "P106",
+      "tail": "Q2526255",
+      "distance": 0.2933969796,
+      "threshold": null,
+      "filterStatus": "accepted",
+      "llmDecision": null,
+      "llmScore": null,
+      "llmRationale": null,
+      "retrievedContext": [],
+      "clusterId": "cluster-9",
+      "whyGenerated": null,
+      "sharedRelation": "P106",
+      "sharedTail": "Q10800557"
+    },
+    {
+      "id": "9a1d6fd8a313dd7a",
+      "head": "Q37459",
+      "relation": "P106",
+      "tail": "Q2526255",
+      "distance": 0.3071272671,
+      "threshold": null,
+      "filterStatus": "accepted",
+      "llmDecision": null,
+      "llmScore": null,
+      "llmRationale": null,
+      "retrievedContext": [],
+      "clusterId": "cluster-9",
+      "whyGenerated": null,
+      "sharedRelation": "P106",
+      "sharedTail": "Q10800557"
+    },
+    {
+      "id": "df561e0423df7726",
+      "head": "Q92602",
+      "relation": "P463",
+      "tail": "Q265058",
+      "distance": 0.308400631,
+      "threshold": null,
+      "filterStatus": "accepted",
+      "llmDecision": null,
+      "llmScore": null,
+      "llmRationale": null,
+      "retrievedContext": [],
+      "clusterId": "cluster-138",
+      "whyGenerated": null,
+      "sharedRelation": "P463",
+      "sharedTail": "Q270794"
+    },
+    {
+      "id": "2e3829e5fff4a067",
+      "head": "Q440121",
+      "relation": "P106",
+      "tail": "Q13474373",
+      "distance": 0.3163528144,
+      "threshold": null,
+      "filterStatus": "accepted",
+      "llmDecision": null,
+      "llmScore": null,
+      "llmRationale": null,
+      "retrievedContext": [],
+      "clusterId": "cluster-127",
+      "whyGenerated": null,
+      "sharedRelation": "P27",
+      "sharedTail": "Q30"
+    },
+    {
+      "id": "2ac960465684636f",
+      "head": "Q116462",
+      "relation": "P106",
+      "tail": "Q2526255",
+      "distance": 0.3182751238,
+      "threshold": null,
+      "filterStatus": "accepted",
+      "llmDecision": null,
+      "llmScore": null,
+      "llmRationale": null,
+      "retrievedContext": [],
+      "clusterId": "cluster-9",
+      "whyGenerated": null,
+      "sharedRelation": "P106",
+      "sharedTail": "Q10800557"
+    }
+  ],
+  "selectedCandidateId": "ac9bdce4e78fde09"
+}
