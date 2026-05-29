@@ -16,6 +16,11 @@ import {
 } from "../components/omnia-presentation/StepNavigator";
 import type { RefinementDecision } from "../lib/buildRefinementGraph";
 import {
+  loadOmniaCandidateExplorer,
+  resolvePresentationCandidate,
+  type OmniaCandidateExplorer,
+} from "../lib/omniaCandidateExplorer";
+import {
   loadPresentationScenario,
   PRESENTATION_DATASET_ORDER,
   type PresentationDatasetId,
@@ -60,6 +65,7 @@ export function OmniaPresentationDemo() {
   const [screen, setScreen] = useState<Screen>(initialScreen);
   const [datasetId, setDatasetId] = useState<PresentationDatasetId>(initialDataset);
   const [scenario, setScenario] = useState<PresentationScenario | null>(null);
+  const [explorer, setExplorer] = useState<OmniaCandidateExplorer | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [selectedCandidateId, setSelectedCandidateId] = useState<string | null>(null);
   const [decisions, setDecisions] = useState<Record<string, Decision>>({});
@@ -72,12 +78,19 @@ export function OmniaPresentationDemo() {
   useEffect(() => {
     let cancelled = false;
     setScenario(null);
+    setExplorer(null);
     setLoadError(null);
-    loadPresentationScenario(datasetId)
-      .then((data) => {
+    Promise.all([loadPresentationScenario(datasetId), loadOmniaCandidateExplorer(datasetId)])
+      .then(([data, ex]) => {
         if (cancelled) return;
         setScenario(data);
-        setSelectedCandidateId(data.selectedCandidateId ?? data.candidates[0]?.id ?? null);
+        setExplorer(ex);
+        const defaultId =
+          data.selectedCandidateId ??
+          ex.sliceCandidates[0]?.id ??
+          data.candidates[0]?.id ??
+          null;
+        setSelectedCandidateId(defaultId);
         setDecisions({});
         setGraphMode("guided");
         setInspect(null);
@@ -99,8 +112,11 @@ export function OmniaPresentationDemo() {
   }, [screen]);
 
   const selectedCandidate = useMemo(
-    () => scenario?.candidates.find((c) => c.id === selectedCandidateId) ?? null,
-    [scenario, selectedCandidateId],
+    () =>
+      scenario
+        ? resolvePresentationCandidate(scenario.candidates, explorer, selectedCandidateId)
+        : null,
+    [scenario, explorer, selectedCandidateId],
   );
 
   const acceptedCount = useMemo(
@@ -155,23 +171,6 @@ export function OmniaPresentationDemo() {
     [graphMode, inspect, fitKey],
   );
 
-  const graphNav = (
-    <GraphNavPanel
-      scenario={scenario}
-      mode={graphMode}
-      onModeChange={(mode) => {
-        setGraphMode(mode);
-        setFitKey((k) => k + 1);
-      }}
-      onFit={() => setFitKey((k) => k + 1)}
-      onFocusNode={(id) => {
-        setGraphMode("explore");
-        setInspect({ type: "node", id });
-        setFitKey((k) => k + 1);
-      }}
-    />
-  );
-
   if (screen === "cover") {
     return <OmniaCoverPage onStart={() => setScreen("getStarted")} />;
   }
@@ -188,6 +187,24 @@ export function OmniaPresentationDemo() {
 
   // Workflow screens share the guided layout.
   const activeScreen: WorkflowScreen = screen;
+
+  const graphNav = (
+    <GraphNavPanel
+      scenario={scenario}
+      mode={graphMode}
+      hideClusterHint={activeScreen === "candidateGeneration"}
+      onModeChange={(mode) => {
+        setGraphMode(mode);
+        setFitKey((k) => k + 1);
+      }}
+      onFit={() => setFitKey((k) => k + 1)}
+      onFocusNode={(id) => {
+        setGraphMode("explore");
+        setInspect({ type: "node", id });
+        setFitKey((k) => k + 1);
+      }}
+    />
+  );
 
   if (loadError) {
     return (
@@ -240,7 +257,8 @@ export function OmniaPresentationDemo() {
       {activeScreen === "candidateGeneration" ? (
         <CandidateGenerationScreen
           scenario={scenario}
-          selectedCandidate={selectedCandidate}
+          explorer={explorer}
+          selectedCandidateId={selectedCandidateId}
           onSelectCandidate={onSelectCandidate}
           onContinue={advance}
           gi={gi}

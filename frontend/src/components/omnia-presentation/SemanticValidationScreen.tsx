@@ -132,7 +132,7 @@ export function SemanticValidationScreen({
               </>
             ) : (
               <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm text-slate-600">
-                This prepared demo shows where LLM validation appears in the OMNIA workflow.
+                LLM validation output is not included for this prepared sample.
               </div>
             )}
           </div>
@@ -161,7 +161,7 @@ export function SemanticValidationScreen({
             </div>
           ) : (
             <p className="text-xs text-slate-500">
-              Retrieved context and the LLM explanation are not included in this prepared demo.
+              LLM/RAG evidence is not included in this prepared demo.
             </p>
           )}
         </div>

@@ -9,6 +9,7 @@ import type {
 const EDGE_COLOR: Record<PGraphEdgeKind, string> = {
   known: "#64748b",
   candidate: "#2563eb",
+  proposed: "#dc2626",
   accepted: "#16a34a",
   rejected: "#dc2626",
   uncertain: "#d97706",

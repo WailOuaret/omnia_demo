@@ -1,0 +1,6 @@
+{
+  "codexM": "codexM_100node.json",
+  "fb15k237": "fb15k237_100node.json",
+  "wn18rr": "wn18rr_100node.json",
+  "covidFact": "covidFact_static_demo.json"
+}

@@ -23,8 +23,9 @@ import type {
 } from "../../lib/buildCandidateGraph";
 
 const EDGE_COLOR: Record<PGraphEdgeKind, string> = {
-  known: "#94a3b8",
+  known: "#64748b",
   candidate: "#2563eb",
+  proposed: "#dc2626",
   accepted: "#16a34a",
   rejected: "#dc2626",
   uncertain: "#d97706",
@@ -111,7 +112,7 @@ function FloatingEdge({ id, source, target, markerEnd, data }: EdgeProps) {
   const kind = (data?.kind as PGraphEdgeKind) ?? "known";
   const highlight = Boolean(data?.highlight);
   const color = EDGE_COLOR[kind];
-  const dashed = kind === "candidate" || kind === "rejected" || kind === "uncertain";
+  const dashed = kind === "candidate" || kind === "proposed" || kind === "rejected" || kind === "uncertain";
   const label = data?.label as string | undefined;
   const mx = (sp.x + tp.x) / 2;
   const my = (sp.y + tp.y) / 2;
@@ -283,7 +284,8 @@ export function InteractiveGraph({
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 border-t border-slate-100 px-4 py-2 text-[11px] text-slate-500">
         {graph?.caption ? <span className="font-medium text-slate-600">{graph.caption}</span> : null}
         <span className="ml-auto flex items-center gap-3">
-          {usedKinds.includes("known") ? <Legend color="#94a3b8" label="Known" /> : null}
+          {usedKinds.includes("known") ? <Legend color="#64748b" label="Known" /> : null}
+          {usedKinds.includes("proposed") ? <Legend color="#dc2626" dashed label="Generated candidate" /> : null}
           {usedKinds.includes("candidate") ? <Legend color="#2563eb" dashed label="Proposed" /> : null}
           {usedKinds.includes("accepted") ? <Legend color="#16a34a" label="Accepted" /> : null}
           {usedKinds.includes("rejected") ? <Legend color="#dc2626" dashed label="Rejected" /> : null}

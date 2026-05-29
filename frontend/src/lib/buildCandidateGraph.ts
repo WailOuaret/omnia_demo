@@ -9,6 +9,7 @@ export type PGraphNodeKind = "tail" | "member" | "candidateTail" | "head" | "con
 export type PGraphEdgeKind =
   | "known"
   | "candidate"
+  | "proposed"
   | "accepted"
   | "rejected"
   | "uncertain"

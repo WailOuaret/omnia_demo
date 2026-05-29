@@ -10,12 +10,14 @@ export type GraphMode = "guided" | "explore";
 export function GraphNavPanel({
   scenario,
   mode,
+  hideClusterHint = false,
   onModeChange,
   onFit,
   onFocusNode,
 }: {
   scenario: PresentationScenario | null;
   mode: GraphMode;
+  hideClusterHint?: boolean;
   onModeChange: (mode: GraphMode) => void;
   onFit: () => void;
   onFocusNode: (id: string) => void;
@@ -75,7 +77,7 @@ export function GraphNavPanel({
         Fit / reset view
       </button>
 
-      {scenario?.cluster.sharedRelation ? (
+      {!hideClusterHint && scenario?.cluster.sharedRelation ? (
         <p className="px-0.5 text-[10px] leading-4 text-slate-400">
           Pattern: {formatRelationLabel(scenario.cluster.sharedRelation)} →{" "}
           {formatEntityLabel(scenario.cluster.sharedTail)}

@@ -26,12 +26,16 @@ export function GraphInspector({
   graph,
   selectedCandidate,
   onClose,
+  generationMode = false,
+  explorerLabels,
 }: {
   target: InspectTarget;
   scenario: PresentationScenario;
   graph: PresentationGraph | null;
   selectedCandidate: PresentationCandidate | null;
   onClose: () => void;
+  generationMode?: boolean;
+  explorerLabels?: Map<string, string>;
 }) {
   if (!target) return null;
 
@@ -63,13 +67,15 @@ export function GraphInspector({
     title = "Relation";
     if (edge) {
       const statusLabel =
-        edge.kind === "candidate"
-          ? "Proposed candidate"
-          : edge.kind === "accepted"
-            ? "Accepted"
-            : edge.kind === "rejected"
-              ? "Rejected"
-              : "Known relation";
+        edge.kind === "proposed"
+          ? "Generated candidate"
+          : edge.kind === "candidate"
+            ? "Proposed candidate"
+            : edge.kind === "accepted"
+              ? "Accepted"
+              : edge.kind === "rejected"
+                ? "Rejected"
+                : "Known relation";
       body = (
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-1.5 text-sm">
@@ -94,11 +100,14 @@ export function GraphInspector({
             <span className="text-blue-600">→ {formatRelationLabel(candidate.relation)} →</span>
             <span className="font-semibold text-slate-900">{formatEntityLabel(candidate.tail)}</span>
           </div>
-          {candidate.distance != null ? <Row k="Structural score" v={candidate.distance.toFixed(3)} /> : null}
-          {candidate.filterStatus ? <Row k="Filter status" v={candidate.filterStatus} /> : null}
-          {candidate.whyGenerated ? (
-            <p className="text-sm text-slate-600">{candidate.whyGenerated}</p>
-          ) : null}
+          {generationMode ? (
+            <p className="text-sm text-rose-600">Generated candidate — validate in the next steps.</p>
+          ) : (
+            <>
+              {candidate.distance != null ? <Row k="Structural score" v={candidate.distance.toFixed(3)} /> : null}
+              {candidate.filterStatus ? <Row k="Filter status" v={candidate.filterStatus} /> : null}
+            </>
+          )}
         </div>
       );
     } else {

@@ -129,7 +129,7 @@ export function StructuralValidationScreen({
               </div>
             ) : (
               <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-600">
-                Structural scores are not included in this prepared demo.
+                Structural score is not included in this prepared sample.
               </div>
             )}
           </div>
