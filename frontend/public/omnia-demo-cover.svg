@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1250" viewBox="0 0 1800 1250">
+  <defs>
+    <style>
+      .title    { font-family: Arial, Helvetica, sans-serif; font-size: 34px; font-weight: 700; fill: #10253f; }
+      .subtitle { font-family: Arial, Helvetica, sans-serif; font-size: 16px; fill: #4a607a; }
+      .header   { font-family: Arial, Helvetica, sans-serif; font-size: 15px; font-weight: 700; fill: white; }
+      .section  { font-family: Arial, Helvetica, sans-serif; font-size: 18px; font-weight: 700; fill: #173452; }
+      .smalltitle { font-family: Arial, Helvetica, sans-serif; font-size: 13px; font-weight: 700; fill: #1d3858; }
+      .body     { font-family: Arial, Helvetica, sans-serif; font-size: 12px; fill: #29435d; }
+      .mono     { font-family: "Courier New", monospace; font-size: 11px; fill: #29435d; }
+      .metric   { font-family: Arial, Helvetica, sans-serif; font-size: 11px; font-weight: 700; fill: #173452; }
+      .caption  { font-family: Georgia, "Times New Roman", serif; font-size: 20px; font-weight: 700; fill: #111; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#3568a8"/>
+    </marker>
+    <marker id="arrowThin" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 z" fill="#3568a8"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1800" height="1250" fill="white"/>
+  <text class="title" x="900" y="54" text-anchor="middle" style="white-space: pre;">OMNIA-Demo: An interactive architecture for KG completion, inspection, and system demonstration</text>
+  <text class="subtitle" x="900" y="80" text-anchor="middle" style="white-space: pre;"> </text>
+  <g id="system_pipeline">
+    <rect x="190" y="98" width="1420" height="130" rx="24" ry="24" fill="#dceaf8"/>
+    <text class="title" x="900" y="135" text-anchor="middle" style="font-size: 21px; white-space: pre;">System Pipeline</text>
+    <rect x="240" y="154" width="290" height="54" rx="10" ry="10" fill="white" stroke="#3568a8" stroke-width="2.2"/>
+    <text class="section" x="385" y="178" text-anchor="middle" style="font-size: 16px; white-space: pre;">User Input</text>
+    <text class="body" x="385" y="196" text-anchor="middle" style="font-size: 11px; white-space: pre;">KG CSV / sample graph</text>
+    <line x1="530" y1="181" x2="612" y2="181" stroke="#3568a8" stroke-width="4" marker-end="url(#arrow)"/>
+    <rect x="620" y="154" width="560" height="54" rx="10" ry="10" fill="white" stroke="#3568a8" stroke-width="2.2"/>
+    <text class="section" x="900" y="178" text-anchor="middle" style="font-size: 16px; white-space: pre;">OMNIA Completion Framework</text>
+    <text class="body" x="900" y="196" text-anchor="middle" style="font-size: 11px; white-space: pre;">candidate generation + filtering + LLM</text>
+    <line x1="1180" y1="181" x2="1232" y2="181" stroke="#3568a8" stroke-width="4" marker-end="url(#arrow)"/>
+    <rect x="1240" y="154" width="310" height="54" rx="10" ry="10" fill="white" stroke="#3568a8" stroke-width="2.2"/>
+    <text class="section" x="1395" y="178" text-anchor="middle" style="font-size: 16px; white-space: pre;">Output</text>
+    <text class="body" x="1395" y="196" text-anchor="middle" style="font-size: 11px; white-space: pre;">Completed KG + evidence</text>
+    <path d="M385,208 C385,250 320,268 320,308" fill="none" stroke="#3568a8" stroke-width="3" marker-end="url(#arrowThin)"/>
+    <path d="M900,208 C900,250 690,268 690,308" fill="none" stroke="#3568a8" stroke-width="3" marker-end="url(#arrowThin)"/>
+    <path d="M1395,208 C1395,250 1411,268 1411,308" fill="none" stroke="#3568a8" stroke-width="3" marker-end="url(#arrowThin)"/>
+  </g>
+  <g id="interactive_ui" transform="matrix(1, 0, 0, 1, -1.86616, 0)">
+    <rect x="110" y="308" width="420" height="292" rx="16" ry="16" fill="white" stroke="#3568a8" stroke-width="3"/>
+    <rect x="110" y="308" width="420" height="44" rx="16" ry="16" fill="#2f6fb3"/>
+    <rect x="110" y="330" width="420" height="22" fill="#2f6fb3"/>
+    <text class="header" x="320" y="328" text-anchor="middle" style="white-space: pre;">Interactive Query Interface with</text>
+    <text class="header" x="320" y="345" text-anchor="middle" style="white-space: pre;">KG Visualisation and Candidate Inspection</text>
+    <text class="body" x="130" y="374" style="white-space: pre;">
+      <tspan x="130" dy="0">A user-friendly interface for loading a KG, browsing</tspan>
+      <tspan x="130" dy="16">clusters, inspecting missing triples, and watching</tspan>
+      <tspan x="130" dy="16">each OMNIA decision in sequence.</tspan>
+    </text>
+    <rect x="126" y="422" width="388" height="162" rx="10" ry="10" fill="#f7f8fb" stroke="#c7d4e6" stroke-width="1.5"/>
+    <rect x="126" y="422" width="388" height="22" rx="10" ry="10" fill="#e9eef7"/>
+    <rect x="126" y="432" width="388" height="12" fill="#e9eef7"/>
+    <circle cx="140" cy="433" r="4" fill="#ef6b6b"/>
+    <circle cx="154" cy="433" r="4" fill="#f0c54a"/>
+    <circle cx="168" cy="433" r="4" fill="#64c15b"/>
+    <text class="body" x="320" y="438" text-anchor="middle" style="font-size: 11px; white-space: pre;">OMNIA Demo Viewer</text>
+    <line x1="342" y1="444" x2="342" y2="584" stroke="#d8dfeb" stroke-width="1.5"/>
+    <line x1="205" y1="530" x2="290" y2="496" stroke="#484848" stroke-width="2"/>
+    <line x1="290" y1="496" x2="245" y2="546" stroke="#484848" stroke-width="2"/>
+    <line x1="205" y1="530" x2="245" y2="546" stroke="#484848" stroke-width="2"/>
+    <line x1="290" y1="496" x2="325" y2="528" stroke="#484848" stroke-width="2"/>
+    <line x1="245" y1="546" x2="325" y2="528" stroke="#484848" stroke-width="2"/>
+    <circle cx="205" cy="530" r="22" fill="white" stroke="#4f8fd8" stroke-width="3"/>
+    <circle cx="290" cy="496" r="22" fill="white" stroke="#4f8fd8" stroke-width="3"/>
+    <circle cx="245" cy="546" r="22" fill="white" stroke="#4f8fd8" stroke-width="3"/>
+    <circle cx="325" cy="528" r="22" fill="white" stroke="#4f8fd8" stroke-width="3"/>
+    <text class="body" x="160" y="482" style="font-size: 10px; white-space: pre;">Battery</text>
+    <text class="body" x="160" y="494" style="font-size: 10px; white-space: pre;">Makers</text>
+    <text class="body" x="305.348" y="456.432" style="font-size: 10px; white-space: pre;">Factories</text>
+    <text class="body" x="238" y="578" style="font-size: 10px; white-space: pre;">EVs</text>
+    <rect x="350" y="448" width="152" height="92" rx="8" ry="8" fill="#fff8ea" stroke="#ead49d" stroke-width="1.4"/>
+    <text class="smalltitle" x="362" y="466" style="white-space: pre;">Selected candidate</text>
+    <text class="mono" x="362" y="482" style="white-space: pre;">
+      <tspan x="362" dy="0">(chloroquine,</tspan>
+      <tspan x="362" dy="14"> treats,</tspan>
+      <tspan x="362" dy="14"> sars-cov-2)</tspan>
+    </text>
+    <rect x="362" y="522" width="64" height="16" rx="6" ry="6" fill="#ffe2a7" stroke="#e0bf64" stroke-width="1"/>
+    <text class="body" x="394" y="534" text-anchor="middle" style="font-size: 10px; white-space: pre;">Generated</text>
+    <rect x="432" y="522" width="64" height="16" rx="6" ry="6" fill="#d8f2d7" stroke="#6aad73" stroke-width="1"/>
+    <text class="body" x="464" y="534" text-anchor="middle" style="font-size: 10px; white-space: pre;">Sent to LLM</text>
+  </g>
+  <g id="sparse_diagnostics">
+    <rect x="110" y="614" width="420" height="274" rx="16" ry="16" fill="white" stroke="#3568a8" stroke-width="3"/>
+    <rect x="110" y="614" width="420" height="44" rx="16" ry="16" fill="#2f6fb3"/>
+    <rect x="110" y="636" width="420" height="22" fill="#2f6fb3"/>
+    <text class="header" x="320" y="634" text-anchor="middle" style="white-space: pre;">Sparse-Graph Diagnostics and</text>
+    <text class="header" x="320" y="651" text-anchor="middle" style="white-space: pre;">Original KG Overview</text>
+    <text class="body" x="130" y="680" style="white-space: pre;">
+      <tspan x="130" dy="0">The demo highlights density, connected components,</tspan>
+      <tspan x="130" dy="16">isolated nodes, and low-support clusters so sparse-</tspan>
+      <tspan x="130" dy="16">graph failure cases are visible to the audience.</tspan>
+    </text>
+    <rect x="140" y="718" width="76" height="40" rx="8" ry="8" fill="#f8fbff" stroke="#d6e2f0" stroke-width="1.1"/>
+    <text class="body" x="178" y="734" text-anchor="middle" style="font-size: 10px; white-space: pre;">Density</text>
+    <text class="section" x="178" y="751" text-anchor="middle" style="font-size: 15px; white-space: pre;">0.07</text>
+    <rect x="232" y="718" width="76" height="40" rx="8" ry="8" fill="#f8fbff" stroke="#d6e2f0" stroke-width="1.1"/>
+    <text class="body" x="270" y="734" text-anchor="middle" style="font-size: 10px; white-space: pre;">Components</text>
+    <text class="section" x="270" y="751" text-anchor="middle" style="font-size: 15px; white-space: pre;">3</text>
+    <rect x="324" y="718" width="76" height="40" rx="8" ry="8" fill="#f8fbff" stroke="#d6e2f0" stroke-width="1.1"/>
+    <text class="body" x="362" y="734" text-anchor="middle" style="font-size: 10px; white-space: pre;">Isolates</text>
+    <text class="section" x="362" y="751" text-anchor="middle" style="font-size: 15px; white-space: pre;">18</text>
+    <rect x="128" y="772" width="204" height="72" rx="8" ry="8" fill="#fff8ea" stroke="#e0bf64" stroke-width="1.2"/>
+    <text class="body" x="138" y="790" style="white-space: pre;">
+      <tspan x="138" dy="0">Sparse-graph warning:</tspan>
+      <tspan x="138" dy="16">OMNIA is strongest when</tspan>
+      <tspan x="138" dy="16">entities or relation-tail</tspan>
+      <tspan x="138" dy="16">patterns repeat.</tspan>
+    </text>
+    <text class="body" x="350" y="787" style="font-size: 11px; white-space: pre;">Connected vs. disconnected regions</text>
+    <line x1="350" y1="848" x2="510" y2="848" stroke="#b6c7db" stroke-width="1.2"/>
+    <line x1="364" y1="848" x2="364" y2="782" stroke="#b6c7db" stroke-width="1.2"/>
+    <rect x="378" y="824" width="14" height="24" fill="#4f8fd8"/>
+    <rect x="400" y="806" width="14" height="42" fill="#4f8fd8"/>
+    <rect x="422" y="830" width="14" height="18" fill="#4f8fd8"/>
+    <rect x="444" y="790" width="14" height="58" fill="#4f8fd8"/>
+    <rect x="466" y="814" width="14" height="34" fill="#4f8fd8"/>
+    <polyline points="364,834 386,806 408,818 430,790 452,800 474,788" fill="none" stroke="#db6b6b" stroke-width="2.2"/>
+    <text class="body" x="438" y="864" text-anchor="middle" style="font-size: 10px; white-space: pre;">degree distribution</text>
+  </g>
+  <g id="inspectable_panel">
+    <rect x="572.709" y="275.828" width="1129.58" height="660" fill="#f7fbff" stroke="#3568a8" stroke-width="3" style="" rx="45.363" ry="45.363"/>
+    <rect x="580" y="322" width="210" height="36" rx="10" ry="10" fill="#edf4fc" stroke="#abc3de" stroke-width="1.5"/>
+    <text class="section" x="685" y="347" text-anchor="middle" style="font-size: 16px; white-space: pre;">Core OMNIA Pipeline</text>
+    <rect x="810" y="322" width="851.977" height="36" rx="10" ry="10" fill="#edf4fc" stroke="#abc3de" stroke-width="1.5" style=""/>
+    <text class="section" x="1194" y="347" text-anchor="middle" style="font-size: 16px; white-space: pre;">Inspectable evidence for each stage</text>
+    <rect x="1372" y="331" width="56" height="18" rx="8" ry="8" fill="#dbe8f6"/>
+    <text class="body" x="1400" y="344" text-anchor="middle" style="font-size: 10px; white-space: pre;">triples</text>
+    <rect x="1433" y="331" width="72" height="18" rx="8" ry="8" fill="#dbe8f6"/>
+    <text class="body" x="1469" y="344" text-anchor="middle" style="font-size: 10px; white-space: pre;">sentences</text>
+    <rect x="1513" y="331" width="44" height="18" rx="8" ry="8" fill="#d8f2d7"/>
+    <text class="body" x="1535" y="344" text-anchor="middle" style="font-size: 10px; white-space: pre;">zero</text>
+    <rect x="1562" y="331" width="58" height="18" rx="8" ry="8" fill="#d8f2d7"/>
+    <text class="body" x="1591" y="344" text-anchor="middle" style="font-size: 10px; white-space: pre;">context</text>
+    <rect x="1623" y="331" width="34" height="18" rx="8" ry="8" fill="#d8f2d7"/>
+    <text class="body" x="1640" y="344" text-anchor="middle" style="font-size: 10px; white-space: pre;">rag</text>
+    <rect x="580" y="380" width="220" height="82" rx="12" ry="12" fill="#dceaf8" stroke="#c6d4e8" stroke-width="1.5"/>
+    <text class="smalltitle" x="582.272" y="400" style="white-space: pre; font-size: 13px;" transform="matrix(0.932541, 0, 0, 0.806452, 39.279366, 77.961151)">Step 1: Relation-tail / head clustering</text>
+    <text class="body" x="600" y="418" style="white-space: pre;">Group heads that share a</text>
+    <text class="body" x="600" y="434" style="white-space: pre;">Relation-Tail pattern.</text>
+    <line x1="690" y1="462" x2="690" y2="478" stroke="#3568a8" stroke-width="3" marker-end="url(#arrowThin)"/>
+    <rect x="580" y="482" width="220" height="82" rx="12" ry="12" fill="#f6edc9" stroke="#c6d4e8" stroke-width="1.5"/>
+    <text class="smalltitle" x="600" y="502" style="white-space: pre;">Step 2: Candidate generation</text>
+    <text class="body" x="600" y="520" style="white-space: pre;">Cross-combine heads with cluster</text>
+    <text class="body" x="600" y="536" style="white-space: pre;">relation-tail pairs.</text>
+    <line x1="690" y1="564" x2="690" y2="580" stroke="#3568a8" stroke-width="3" marker-end="url(#arrowThin)"/>
+    <rect x="580" y="584" width="220" height="82" rx="12" ry="12" fill="#dbead9" stroke="#c6d4e8" stroke-width="1.5"/>
+    <text class="smalltitle" x="600" y="604" style="white-space: pre;">Step 3: TransE filtering</text>
+    <text class="body" x="600" y="622" style="white-space: pre;">Train PyKEEN TransE and score</text>
+    <text class="body" x="600" y="638" style="white-space: pre;">candidates by distance.</text>
+    <line x1="690" y1="666" x2="690" y2="682" stroke="#3568a8" stroke-width="3" marker-end="url(#arrowThin)"/>
+    <rect x="580" y="686" width="220" height="82" rx="12" ry="12" fill="#f4d8d8" stroke="#c6d4e8" stroke-width="1.5"/>
+    <text class="smalltitle" x="600" y="706" style="white-space: pre;">Step 4: LLM validation</text>
+    <text class="body" x="600" y="724" style="white-space: pre;">Zero-shot, in-context, or RAG</text>
+    <text class="body" x="600" y="740" style="white-space: pre;">over triples / sentences.</text>
+    <line x1="690" y1="768" x2="690" y2="784" stroke="#3568a8" stroke-width="3" marker-end="url(#arrowThin)"/>
+    <rect x="580" y="788" width="220" height="82" rx="12" ry="12" fill="#dae6f7" stroke="#c6d4e8" stroke-width="1.5"/>
+    <text class="smalltitle" x="600" y="808" style="white-space: pre;">Step 5: KG update &amp; diff</text>
+    <text class="body" x="600" y="826" style="white-space: pre;">Accepted triples are added to</text>
+    <text class="body" x="600" y="842" style="white-space: pre;">the completed KG.</text>
+    <text class="section" x="690" y="896" text-anchor="middle" style="font-size: 16px; white-space: pre;">Completed Knowledge Graph</text>
+    <line x1="800" y1="421" x2="828" y2="421" stroke="#3568a8" stroke-width="2.5" marker-end="url(#arrowThin)"/>
+    <line x1="800" y1="523" x2="1198" y2="480" stroke="#3568a8" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowThin)"/>
+    <line x1="800" y1="625" x2="828" y2="700" stroke="#3568a8" stroke-width="2.5" marker-end="url(#arrowThin)"/>
+    <line x1="800" y1="727" x2="1244" y2="727" stroke="#3568a8" stroke-width="2.5" marker-end="url(#arrowThin)"/>
+    <line x1="690" y1="870" x2="1390" y2="760" stroke="#3568a8" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowThin)"/>
+    <g id="cluster_inspector">
+      <rect x="830" y="380" width="350" height="232" rx="12" ry="12" fill="white" stroke="#c6d4e8" stroke-width="1.5"/>
+      <rect x="830" y="380" width="350" height="26" rx="12" ry="12" fill="#d6e4f6"/>
+      <rect x="830" y="394" width="350" height="12" fill="#d6e4f6"/>
+      <text class="smalltitle" x="1005" y="398" text-anchor="middle" style="white-space: pre;">Cluster Inspector</text>
+      <text class="body" x="846" y="422" style="white-space: pre;">
+        <tspan x="846" dy="0">Head entities grouped by a shared (Relation, Tail) key.</tspan>
+      </text>
+      <rect x="844" y="432" width="140" height="18" rx="6" ry="6" fill="#f2f6fb" stroke="#d6e2f0" stroke-width="1"/>
+      <text class="body" x="914" y="445" text-anchor="middle" style="font-size: 10px; white-space: pre;">cluster key: (treats, covid-19)</text>
+      <line x1="900" y1="518" x2="950" y2="488" stroke="#6d8eb8" stroke-width="2"/>
+      <line x1="950" y1="488" x2="1000" y2="518" stroke="#6d8eb8" stroke-width="2"/>
+      <line x1="950" y1="488" x2="950" y2="548" stroke="#6d8eb8" stroke-width="2"/>
+      <line x1="900" y1="518" x2="950" y2="548" stroke="#6d8eb8" stroke-width="2"/>
+      <line x1="1000" y1="518" x2="950" y2="548" stroke="#6d8eb8" stroke-width="2"/>
+      <circle cx="900" cy="518" r="12" fill="white" stroke="#4f8fd8" stroke-width="2"/>
+      <circle cx="950" cy="488" r="12" fill="white" stroke="#4f8fd8" stroke-width="2"/>
+      <circle cx="1000" cy="518" r="12" fill="white" stroke="#4f8fd8" stroke-width="2"/>
+      <circle cx="950" cy="548" r="12" fill="white" stroke="#4f8fd8" stroke-width="2"/>
+      <text class="body" x="866" y="572" style="white-space: pre;">shared heads</text>
+      <text class="body" x="980" y="572" style="white-space: pre;">shared tail-side context</text>
+      <rect x="1056" y="456" width="112" height="82" rx="8" ry="8" fill="#fff8ea" stroke="#e0bf64" stroke-width="1.2"/>
+      <text class="body" x="1064" y="474" style="white-space: pre;">
+        <tspan x="1064" dy="0">Sparse case:</tspan>
+        <tspan x="1064" dy="14">If few entities share</tspan>
+        <tspan x="1064" dy="14">a relation-tail key,</tspan>
+        <tspan x="1064" dy="14">use a controlled</tspan>
+        <tspan x="1064" dy="14">fallback.</tspan>
+      </text>
+    </g>
+    <g id="candidate_inspector">
+      <rect x="1206" y="380" width="370" height="232" rx="12" ry="12" fill="white" stroke="#c6d4e8" stroke-width="1.5"/>
+      <rect x="1206" y="380" width="370" height="26" rx="12" ry="12" fill="#d6e4f6"/>
+      <rect x="1206" y="394" width="370" height="12" fill="#d6e4f6"/>
+      <text class="smalltitle" x="1391" y="398" text-anchor="middle" style="white-space: pre;">Candidate Inspector</text>
+      <text class="body" x="1220" y="422" style="white-space: pre;">
+        <tspan x="1220" dy="0">Generated triples keep provenance so the audience can</tspan>
+        <tspan x="1220" dy="14">see why each candidate exists.</tspan>
+      </text>
+      <text class="metric" x="1220" y="452" style="white-space: pre;">Head</text>
+      <text class="metric" x="1306" y="452" style="white-space: pre;">Relation</text>
+      <text class="metric" x="1390" y="452" style="white-space: pre;">Tail</text>
+      <text class="metric" x="1462" y="452" style="white-space: pre;">Src</text>
+      <text class="metric" x="1506" y="452" style="white-space: pre;">Status</text>
+      <line x1="1218" y1="460" x2="1568" y2="460" stroke="#dfe8f3" stroke-width="1"/>
+      <text class="body" x="1220" y="478" style="white-space: pre;">chloroquine</text>
+      <text class="body" x="1306" y="478" style="white-space: pre;">treats</text>
+      <text class="body" x="1390" y="478" style="white-space: pre;">sars-cov-2</text>
+      <text class="body" x="1462" y="478" style="white-space: pre;">C7</text>
+      <rect x="1500" y="466" width="62" height="16" rx="6" ry="6" fill="#d8f2d7" stroke="#6aad73" stroke-width="1"/>
+      <text class="body" x="1531" y="478" text-anchor="middle" style="font-size: 10px; white-space: pre;">LLM ✓</text>
+      <line x1="1218" y1="488" x2="1568" y2="488" stroke="#dfe8f3" stroke-width="1"/>
+      <text class="body" x="1220" y="506" style="white-space: pre;">remdesivir</text>
+      <text class="body" x="1306" y="506" style="white-space: pre;">affects</text>
+      <text class="body" x="1390" y="506" style="white-space: pre;">mers</text>
+      <text class="body" x="1462" y="506" style="white-space: pre;">C7</text>
+      <rect x="1500" y="494" width="62" height="16" rx="6" ry="6" fill="#f4d8d8" stroke="#db6b6b" stroke-width="1"/>
+      <text class="body" x="1531" y="506" text-anchor="middle" style="font-size: 10px; white-space: pre;">Rejected</text>
+      <line x1="1218" y1="516" x2="1568" y2="516" stroke="#dfe8f3" stroke-width="1"/>
+      <text class="body" x="1220" y="534" style="white-space: pre;">battery A</text>
+      <text class="body" x="1306" y="534" style="white-space: pre;">owns</text>
+      <text class="body" x="1390" y="534" style="white-space: pre;">factory 2</text>
+      <text class="body" x="1462" y="534" style="white-space: pre;">C2</text>
+      <rect x="1500" y="522" width="62" height="16" rx="6" ry="6" fill="#d8f2d7" stroke="#6aad73" stroke-width="1"/>
+      <text class="body" x="1531" y="534" text-anchor="middle" style="font-size: 10px; white-space: pre;">Filter ✓</text>
+      <line x1="1218" y1="544" x2="1568" y2="544" stroke="#dfe8f3" stroke-width="1"/>
+      <text class="body" x="1220" y="562" style="white-space: pre;">EV brand</text>
+      <text class="body" x="1306" y="562" style="white-space: pre;">made_in</text>
+      <text class="body" x="1390" y="562" style="white-space: pre;">factory 2</text>
+      <text class="body" x="1462" y="562" style="white-space: pre;">C2</text>
+      <rect x="1500" y="550" width="62" height="16" rx="6" ry="6" fill="#ffe2a7" stroke="#e0bf64" stroke-width="1"/>
+      <text class="body" x="1531" y="562" text-anchor="middle" style="font-size: 10px; white-space: pre;">Generated</text>
+      <line x1="1218" y1="572" x2="1568" y2="572" stroke="#dfe8f3" stroke-width="1"/>
+      <text class="body" x="1220" y="590" style="white-space: pre;">Status path: Generated → Filtered → Scored → Accepted</text>
+    </g>
+    <g id="prompt_rag_viewer" style="" transform="matrix(1, 0, 0, 1.07278, 0, -46.288223)">
+      <rect x="830" y="636" width="390" height="263.312" rx="12" ry="12" fill="white" stroke="#c6d4e8" stroke-width="1.5" style=""/>
+      <rect x="830" y="636" width="390" height="26" rx="12" ry="12" fill="#d6e4f6"/>
+      <rect x="830" y="650" width="390" height="12" fill="#d6e4f6"/>
+      <text class="smalltitle" x="1025" y="654" text-anchor="middle" style="white-space: pre;">Prompt / RAG Viewer</text>
+      <rect x="845" y="671" width="58" height="18" rx="8" ry="8" fill="#dbe8f6"/>
+      <text class="body" x="874" y="684" text-anchor="middle" style="font-size: 10px; white-space: pre;">triples</text>
+      <rect x="909" y="671" width="72" height="18" rx="8" ry="8" fill="#dbe8f6"/>
+      <text class="body" x="945" y="684" text-anchor="middle" style="font-size: 10px; white-space: pre;">sentences</text>
+      <rect x="989" y="671" width="44" height="18" rx="8" ry="8" fill="#d8f2d7"/>
+      <text class="body" x="1011" y="684" text-anchor="middle" style="font-size: 10px; white-space: pre;">zero</text>
+      <rect x="1038" y="671" width="58" height="18" rx="8" ry="8" fill="#d8f2d7"/>
+      <text class="body" x="1067" y="684" text-anchor="middle" style="font-size: 10px; white-space: pre;">context</text>
+      <rect x="1101" y="671" width="34" height="18" rx="8" ry="8" fill="#d8f2d7"/>
+      <text class="body" x="1118" y="684" text-anchor="middle" style="font-size: 10px; white-space: pre;">rag</text>
+      <rect x="1140" y="671" width="68" height="18" rx="8" ry="8" fill="#d8f2d7"/>
+      <text class="body" x="1174" y="684" text-anchor="middle" style="font-size: 10px; white-space: pre;">top-k=2</text>
+      <text class="smalltitle" x="846" y="708" style="white-space: pre;">Candidate triple</text>
+      <rect x="846" y="712" width="358" height="24" rx="6" ry="6" fill="#fffae8" stroke="#e0bf64" stroke-width="1"/>
+      <text class="mono" x="858" y="728" style="white-space: pre;">chloroquine  →  treats  →  2019-ncov</text>
+      <text class="smalltitle" x="846" y="754" style="white-space: pre;">Prompt template</text>
+      <rect x="846" y="758" width="358" height="62" rx="8" ry="8" fill="#f7fbff" stroke="#d6e2f0" stroke-width="1"/>
+      <text class="mono" x="858" y="774" style="white-space: pre;">
+        <tspan x="858" dy="0">Your task is to only transform the triple</tspan>
+        <tspan x="858" dy="14">into a sentence, no matter if it is correct</tspan>
+        <tspan x="858" dy="14">or not. Do not rephrase incorrect facts.</tspan>
+      </text>
+      <text class="smalltitle" x="846" y="838" style="white-space: pre;">Retrieved context (top-k = 2)</text>
+      <rect x="846" y="842" width="358" height="20" rx="6" ry="6" fill="#f7fbff" stroke="#dfe8f3" stroke-width="1"/>
+      <text class="mono" x="854" y="856" style="white-space: pre;">Head: remdesivir   Rel: inhibits   Tail: 2019-ncov</text>
+      <rect x="846" y="866" width="358" height="20" rx="6" ry="6" fill="#f7fbff" stroke="#dfe8f3" stroke-width="1"/>
+      <text class="mono" x="854" y="880" style="white-space: pre;">Head: chloroquine  Rel: inhibits   Tail: sars-cov-2</text>
+    </g>
+    <g id="metrics_viewer">
+      <rect x="1246" y="636" width="330" height="232" rx="12" ry="12" fill="white" stroke="#c6d4e8" stroke-width="1.5"/>
+      <rect x="1246" y="636" width="330" height="26" rx="12" ry="12" fill="#d6f0da"/>
+      <rect x="1246" y="650" width="330" height="12" fill="#d6f0da"/>
+      <text class="smalltitle" x="1411" y="654" text-anchor="middle" style="white-space: pre;">Acceptance, Diff &amp; Metrics</text>
+      <rect x="1258" y="670" width="132" height="76" rx="8" ry="8" fill="#f7fbff" stroke="#d6e2f0" stroke-width="1.1"/>
+      <text class="smalltitle" x="1324" y="688" text-anchor="middle" style="white-space: pre;">Decision</text>
+      <circle cx="1324" cy="712" r="18" fill="#d8f2d7" stroke="#6aad73" stroke-width="2"/>
+      <text class="section" x="1324" y="719" text-anchor="middle" style="font-size: 18px; white-space: pre;">✓</text>
+      <text class="body" x="1324" y="738" text-anchor="middle" style="white-space: pre;">Accepted</text>
+      <rect x="1402" y="670" width="162" height="76" rx="8" ry="8" fill="#f7fbff" stroke="#d6e2f0" stroke-width="1.1"/>
+      <text class="smalltitle" x="1412" y="688" style="white-space: pre;">Completed KG diff</text>
+      <circle cx="1412" cy="708" r="5" fill="#57b86a"/>
+      <text class="mono" x="1422" y="712" style="white-space: pre;">+ (chloroquine,</text>
+      <text class="mono" x="1422" y="726" style="white-space: pre;">  treats, sars-cov-2)</text>
+      <circle cx="1412" cy="738" r="5" fill="#db6b6b"/>
+      <text class="mono" x="1415.93" y="741.067" style="white-space: pre; font-size: 11px;" transform="matrix(0.74402, 0, 0, 1, 362.45047, 0)">- (remdesivir, affects, mers)</text>
+      <text class="body" x="1258" y="766" style="white-space: pre;">Accuracy</text>
+      <rect x="1330" y="758" width="220" height="10" fill="#ecf2f8"/>
+      <rect x="1330" y="758" width="189" height="10" fill="#4f8fd8"/>
+      <text class="body" x="1562" y="766" text-anchor="end" style="white-space: pre;">0.86</text>
+      <text class="body" x="1258" y="784" style="white-space: pre;">Precision</text>
+      <rect x="1330" y="776" width="220" height="10" fill="#ecf2f8"/>
+      <rect x="1330" y="776" width="196" height="10" fill="#4f8fd8"/>
+      <text class="body" x="1562" y="784" text-anchor="end" style="white-space: pre;">0.89</text>
+      <text class="body" x="1258" y="802" style="white-space: pre;">Recall</text>
+      <rect x="1330" y="794" width="220" height="10" fill="#ecf2f8"/>
+      <rect x="1330" y="794" width="180" height="10" fill="#4f8fd8"/>
+      <text class="body" x="1562" y="802" text-anchor="end" style="white-space: pre;">0.82</text>
+      <text class="body" x="1258" y="820" style="white-space: pre;">F1-score</text>
+      <rect x="1330" y="812" width="220" height="10" fill="#ecf2f8"/>
+      <rect x="1330" y="812" width="189" height="10" fill="#4f8fd8"/>
+      <text class="body" x="1562" y="820" text-anchor="end" style="white-space: pre;">0.86</text>
+      <rect x="1258" y="836" width="310" height="22" rx="8" ry="8" fill="#f7fbff" stroke="#d6e2f0" stroke-width="1.1"/>
+      <text class="body" x="1264" y="851" style="white-space: pre;">Exports: evaluated_df.csv | results.csv | diff.csv</text>
+    </g>
+  </g>
+  <g id="data_model_layer" transform="matrix(1, 0, 0, 1, 12.130038, 2.3327)">
+    <rect x="110" y="972" width="1570" height="172" rx="20" ry="20" fill="#f7fbff" stroke="#3568a8" stroke-width="3"/>
+    <rect x="128" y="986" width="210" height="36" rx="10" ry="10" fill="#edf4fc" stroke="#abc3de" stroke-width="1.5"/>
+    <text class="section" x="233" y="1011" text-anchor="middle" style="white-space: pre;">Data / Model Layer</text>
+    <rect x="140" y="1032" width="300" height="90" rx="12" ry="12" fill="white" stroke="#c6d4e8" stroke-width="1.5"/>
+    <text class="smalltitle" x="290" y="1052" text-anchor="middle" style="white-space: pre;">Original KG CSV</text>
+    <text class="body" x="290" y="1072" text-anchor="middle" style="white-space: pre;">
+      <tspan x="290" dy="0">Input format: Head, Relation, Tail.</tspan>
+      <tspan x="290" dy="15">Missing labels are created for evaluation.</tspan>
+    </text>
+    <rect x="156" y="1048" width="64" height="42" rx="6" ry="6" fill="white" stroke="#3568a8" stroke-width="2"/>
+    <line x1="156" y1="1062" x2="220" y2="1062" stroke="#3568a8" stroke-width="1.5"/>
+    <line x1="178" y1="1048" x2="178" y2="1090" stroke="#3568a8" stroke-width="1.5"/>
+    <line x1="199" y1="1048" x2="199" y2="1090" stroke="#3568a8" stroke-width="1.5"/>
+    <text class="metric" x="166" y="1059" style="white-space: pre;">H</text>
+    <text class="metric" x="187" y="1059" style="white-space: pre;">R</text>
+    <text class="metric" x="209" y="1059" style="white-space: pre;">T</text>
+    <rect x="470" y="1032" width="300" height="90" rx="12" ry="12" fill="white" stroke="#c6d4e8" stroke-width="1.5"/>
+    <text class="smalltitle" x="620" y="1052" text-anchor="middle" style="white-space: pre;">TransE / PyKEEN filter</text>
+    <text class="body" x="620" y="1072" text-anchor="middle" style="white-space: pre;">
+      <tspan x="620" dy="0">Trains TransE and filters candidate</tspan>
+      <tspan x="620" dy="15">triples by distance threshold.</tspan>
+    </text>
+    <text class="section" x="620" y="1108" text-anchor="middle" style="font-size: 16px; white-space: pre;">h + r ≈ t</text>
+    <rect x="800" y="1032" width="300" height="90" rx="12" ry="12" fill="white" stroke="#c6d4e8" stroke-width="1.5"/>
+    <text class="smalltitle" x="950" y="1052" text-anchor="middle" style="white-space: pre;">RAG context store</text>
+    <text class="body" x="950" y="1072" text-anchor="middle" style="white-space: pre;">
+      <tspan x="950" dy="0">CSVLoader + embeddings + FAISS</tspan>
+      <tspan x="950" dy="15">retrieve similar triples (top-k = 2).</tspan>
+    </text>
+    <rect x="1130" y="1032" width="300" height="90" rx="12" ry="12" fill="white" stroke="#c6d4e8" stroke-width="1.5"/>
+    <text class="smalltitle" x="1280" y="1052" text-anchor="middle" style="white-space: pre;">Ollama / LangChain / Results</text>
+    <text class="body" x="1280" y="1072" text-anchor="middle" style="white-space: pre;">
+      <tspan x="1280" dy="0">Mistral via Ollama scores candidates</tspan>
+      <tspan x="1280" dy="15">and writes metrics CSVs.</tspan>
+    </text>
+    <path d="M 180 1032 C 333.796 1041.618 -229.579 1055.233 90.566 511.187" fill="none" stroke="#3568a8" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowThin)"/>
+    <path d="M510,1032 C510,930 690,900 690,666" fill="none" stroke="#3568a8" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowThin)"/>
+    <path d="M 840 1032 C 840 940 955.802 1028.56 1002.14 919.319" fill="none" stroke="#3568a8" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowThin)"/>
+    <path d="M1170,1032 C1170,940 1411,920 1411,868" fill="none" stroke="#3568a8" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#arrowThin)"/>
+  </g>
+  <text class="caption" x="900" y="1196" text-anchor="middle" style="white-space: pre;">Figure 1: OMNIA-Demo</text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 28px;" x="1580.15" y="1190.96"> </text>
+  <text style="white-space: pre; fill: rgb(51, 51, 51); font-family: Arial, sans-serif; font-size: 28px;" x="1109.67" y="91.759"> </text>
+</svg>

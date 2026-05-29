@@ -8,7 +8,7 @@ const LABELS: Record<PresentationDatasetId, string> = {
   codexM: "CoDEx-M",
   fb15k237: "FB15K-237",
   wn18rr: "WN18RR",
-  covidFact: "COVID-Fact",
+  covidFact: "COVID-Fact static",
 };
 
 export function DatasetSelectorCard({
@@ -56,7 +56,7 @@ export function DatasetSelectorCard({
               isSelected ? "border-blue-500 bg-blue-50 shadow-sm" : "border-slate-200 bg-white hover:border-slate-300"
             }`}
           >
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-2">
               <p className="text-sm font-semibold text-slate-900">{LABELS[id]}</p>
               {id === "covidFact" ? (
                 <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] uppercase tracking-wide text-slate-500">
@@ -66,7 +66,7 @@ export function DatasetSelectorCard({
             </div>
             {facts ? (
               <p className="mt-1 text-[11px] text-slate-500">
-                {facts.entities.toLocaleString()} entities · {facts.triples.toLocaleString()} triples
+                {facts.entities.toLocaleString()} entities / {facts.triples.toLocaleString()} triples
               </p>
             ) : null}
           </button>

@@ -39,6 +39,10 @@ export interface PresentationGraph {
   nodes: PGraphNode[];
   edges: PGraphEdge[];
   caption?: string;
+  overflow?: {
+    knownMore: number;
+    candidateMore: number;
+  };
 }
 
 const WIDTH = 760;

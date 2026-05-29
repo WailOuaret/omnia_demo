@@ -1,8 +1,5 @@
 import { useState } from "react";
-import {
-  formatEntityLabel,
-  formatRelationLabel,
-} from "../../lib/formatKgLabel";
+import { formatEntityLabel } from "../../lib/formatKgLabel";
 import type { PresentationScenario } from "../../lib/omniaPresentationData";
 
 export type GraphMode = "guided" | "explore";
@@ -10,14 +7,12 @@ export type GraphMode = "guided" | "explore";
 export function GraphNavPanel({
   scenario,
   mode,
-  hideClusterHint = false,
   onModeChange,
   onFit,
   onFocusNode,
 }: {
   scenario: PresentationScenario | null;
   mode: GraphMode;
-  hideClusterHint?: boolean;
   onModeChange: (mode: GraphMode) => void;
   onFit: () => void;
   onFocusNode: (id: string) => void;
@@ -29,25 +24,25 @@ export function GraphNavPanel({
     const q = query.trim().toLowerCase();
     const pool = [...scenario.guided.nodes, ...scenario.overview.nodes];
     const match =
-      pool.find((n) => formatEntityLabel(n.id, n.label).toLowerCase() === q) ??
-      pool.find((n) => formatEntityLabel(n.id, n.label).toLowerCase().includes(q)) ??
-      pool.find((n) => n.id.toLowerCase().includes(q));
+      pool.find((node) => formatEntityLabel(node.id, node.label).toLowerCase() === q) ??
+      pool.find((node) => formatEntityLabel(node.id, node.label).toLowerCase().includes(q)) ??
+      pool.find((node) => node.id.toLowerCase().includes(q));
     if (match) onFocusNode(match.id);
   };
 
   return (
     <div className="space-y-2.5">
       <div className="grid grid-cols-2 gap-1 rounded-lg bg-slate-100 p-1">
-        {(["guided", "explore"] as GraphMode[]).map((m) => (
+        {(["guided", "explore"] as GraphMode[]).map((graphMode) => (
           <button
-            key={m}
+            key={graphMode}
             type="button"
-            onClick={() => onModeChange(m)}
+            onClick={() => onModeChange(graphMode)}
             className={`rounded-md px-2 py-1.5 text-xs font-medium capitalize transition ${
-              mode === m ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
+              mode === graphMode ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"
             }`}
           >
-            {m} view
+            {graphMode} view
           </button>
         ))}
       </div>
@@ -55,9 +50,9 @@ export function GraphNavPanel({
       <div className="flex gap-1.5">
         <input
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && runSearch()}
-          placeholder="Search node…"
+          onChange={(event) => setQuery(event.target.value)}
+          onKeyDown={(event) => event.key === "Enter" && runSearch()}
+          placeholder="Search node..."
           className="min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs text-slate-700 placeholder:text-slate-400"
         />
         <button
@@ -77,11 +72,8 @@ export function GraphNavPanel({
         Fit / reset view
       </button>
 
-      {!hideClusterHint && scenario?.cluster.sharedRelation ? (
-        <p className="px-0.5 text-[10px] leading-4 text-slate-400">
-          Pattern: {formatRelationLabel(scenario.cluster.sharedRelation)} →{" "}
-          {formatEntityLabel(scenario.cluster.sharedTail)}
-        </p>
+      {scenario?.static ? (
+        <p className="px-0.5 text-[10px] leading-4 text-slate-400">Static prepared sample</p>
       ) : null}
     </div>
   );

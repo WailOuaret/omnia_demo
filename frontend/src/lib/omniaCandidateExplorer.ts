@@ -2,7 +2,11 @@
 // for interactive Candidate Generation exploration.
 
 import { formatEntityLabel, formatRelationLabel } from "./formatKgLabel";
-import type { PresentationCandidate, PresentationDatasetId } from "./omniaPresentationData";
+import {
+  loadDemoScenarioRaw,
+  type PresentationCandidate,
+  type PresentationDatasetId,
+} from "./omniaPresentationData";
 
 export type CandidateExploreBy = "entity" | "relation" | "candidate";
 
@@ -19,6 +23,8 @@ export interface ExplorerTriple {
   llmScore: number | null;
   llmRationale: string | null;
   whyGenerated: string | null;
+  sharedRelation: string | null;
+  sharedTail: string | null;
 }
 
 export interface EntityIndexEntry {
@@ -58,13 +64,6 @@ export interface OmniaCandidateExplorer {
   metrics: { generatedCandidates: number | null };
 }
 
-const RESULT_FILES: Record<PresentationDatasetId, string> = {
-  codexM: "codexM_100node.json",
-  fb15k237: "fb15k237_100node.json",
-  wn18rr: "wn18rr_100node.json",
-  covidFact: "covidFact_static_demo.json",
-};
-
 const loadCache = new Map<PresentationDatasetId, Promise<OmniaCandidateExplorer>>();
 
 function toNum(v: unknown): number | null {
@@ -73,12 +72,20 @@ function toNum(v: unknown): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
+function splitClusterKey(value: unknown): { relation: string | null; tail: string | null } {
+  const raw = Array.isArray(value) ? String(value[0] ?? "") : String(value ?? "");
+  if (!raw.includes(" -> ")) return { relation: null, tail: null };
+  const [relation, tail] = raw.split(" -> ", 2);
+  return { relation: relation.trim() || null, tail: tail.trim() || null };
+}
+
 function parseTriple(raw: Record<string, unknown>, isCandidate: boolean): ExplorerTriple | null {
   const head = String(raw.Head ?? raw.head ?? "");
   const relation = String(raw.Relation ?? raw.relation ?? "");
   const tail = String(raw.Tail ?? raw.tail ?? "");
   if (!head || !relation || !tail) return null;
   const id = String(raw.candidate_id ?? raw.id ?? `${head}|${relation}|${tail}`);
+  const shared = splitClusterKey(raw.cluster_keys);
   return {
     id,
     head,
@@ -87,11 +94,13 @@ function parseTriple(raw: Record<string, unknown>, isCandidate: boolean): Explor
     isCandidate,
     distance: toNum(raw.distance),
     threshold: toNum(raw.threshold),
-    filterStatus: String(raw.filter_status ?? raw.status_bucket ?? ""),
+    filterStatus: String(raw.filter_status ?? raw.status_bucket ?? raw.status ?? ""),
     llmDecision: raw.llm_decision != null ? String(raw.llm_decision) : null,
     llmScore: toNum(raw.llm_score),
     llmRationale: raw.llm_rationale != null ? String(raw.llm_rationale) : null,
-    whyGenerated: raw.why_generated != null ? String(raw.why_generated) : null,
+    whyGenerated: raw.why_generated != null ? String(raw.why_generated) : raw.rationale != null ? String(raw.rationale) : null,
+    sharedRelation: shared.relation,
+    sharedTail: shared.tail,
   };
 }
 
@@ -234,6 +243,8 @@ export function buildOmniaCandidateExplorer(
       llmScore: null,
       llmRationale: null,
       whyGenerated: null,
+      sharedRelation: null,
+      sharedTail: null,
     };
     addKnownToEntity(edge.source, triple);
     addKnownToEntity(edge.target, triple);
@@ -275,8 +286,11 @@ export function buildOmniaCandidateExplorer(
     .sort((a, b) => b.candidateCount - a.candidateCount)
     .slice(0, 20);
 
-  const genSummary = raw.candidateGeneration as { summary?: { generated_candidates?: number } } | undefined;
+  const genSummary = raw.candidateGeneration as
+    | { summary?: { generated_count?: number; generated_candidates?: number } }
+    | undefined;
   const generatedCandidates =
+    genSummary?.summary?.generated_count ??
     genSummary?.summary?.generated_candidates ??
     (raw.generatedCandidates as unknown[] | undefined)?.length ??
     allCandidates.length;
@@ -300,14 +314,7 @@ export function loadOmniaCandidateExplorer(datasetId: PresentationDatasetId): Pr
   const cached = loadCache.get(datasetId);
   if (cached) return cached;
 
-  const file = RESULT_FILES[datasetId];
-  const url = `${import.meta.env.BASE_URL}omnia-results/${file}`;
-  const promise = fetch(url)
-    .then((res) => {
-      if (!res.ok) throw new Error(`Could not load OMNIA results for ${datasetId} (${res.status})`);
-      return res.json() as Promise<Record<string, unknown>>;
-    })
-    .then((raw) => buildOmniaCandidateExplorer(datasetId, raw));
+  const promise = loadDemoScenarioRaw(datasetId).then((raw) => buildOmniaCandidateExplorer(datasetId, raw));
 
   loadCache.set(datasetId, promise);
   return promise;
@@ -328,8 +335,8 @@ export function explorerTripleToPresentation(t: ExplorerTriple): PresentationCan
     retrievedContext: [],
     clusterId: null,
     whyGenerated: t.whyGenerated,
-    sharedRelation: null,
-    sharedTail: null,
+    sharedRelation: t.sharedRelation,
+    sharedTail: t.sharedTail,
   };
 }
 

@@ -39,14 +39,16 @@ export function PresentationLayout({
             <span className="hidden text-xs text-slate-400 sm:inline">Interactive KG Completion</span>
           </button>
           <div className="flex items-center gap-2 text-sm">
-            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">{datasetLabel}</span>
+            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
+              {datasetLabel}
+            </span>
             <button
               type="button"
               disabled={!canPrev}
               onClick={() => canPrev && onScreenChange(WORKFLOW_ORDER[index - 1])}
               className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm text-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
             >
-              ← Previous
+              Previous
             </button>
             <button
               type="button"
@@ -54,7 +56,7 @@ export function PresentationLayout({
               onClick={() => canNext && onScreenChange(WORKFLOW_ORDER[index + 1])}
               className="rounded-lg border border-slate-900 bg-slate-900 px-3 py-1.5 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-40"
             >
-              {canNext ? `Next: ${WORKFLOW_LABELS[WORKFLOW_ORDER[index + 1]]}` : "Next →"}
+              {canNext ? `Next: ${WORKFLOW_LABELS[WORKFLOW_ORDER[index + 1]]}` : "Next"}
             </button>
           </div>
         </div>

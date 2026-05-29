@@ -4,9 +4,9 @@ import type { PresentationCandidate } from "../../lib/omniaPresentationData";
 function statusBadge(candidate: PresentationCandidate): { label: string; cls: string } | null {
   const status = (candidate.filterStatus || "").toLowerCase();
   if (status.includes("accept") || status === "kept") {
-    return { label: "Kept", cls: "bg-emerald-100 text-emerald-700" };
+    return { label: "Passed", cls: "bg-emerald-100 text-emerald-700" };
   }
-  if (status.includes("reject") || status === "removed") {
+  if (status.includes("reject") || status.includes("removed") || status.includes("filtered")) {
     return { label: "Removed", cls: "bg-rose-100 text-rose-700" };
   }
   return null;
@@ -23,10 +23,9 @@ export function CandidateTripleCard({
   selected: boolean;
   onSelect: (id: string) => void;
   compact?: boolean;
-  /** Candidate Generation: triple only, no scores or filter status */
   generationMode?: boolean;
 }) {
-  const badge = generationMode ? null : statusBadge(candidate);
+  const badge = generationMode || compact ? null : statusBadge(candidate);
   return (
     <button
       type="button"
@@ -35,9 +34,9 @@ export function CandidateTripleCard({
         selected ? "border-blue-500 bg-blue-50 shadow-sm" : "border-slate-200 bg-white hover:border-slate-300"
       }`}
     >
-      <div className="flex items-center gap-1.5 text-sm">
+      <div className="flex flex-wrap items-center gap-1.5 text-sm">
         <span className="font-semibold text-slate-900">{formatEntityLabel(candidate.head)}</span>
-        <span className="text-blue-600">→ {formatRelationLabel(candidate.relation)} →</span>
+        <span className="text-blue-600">-&gt; {formatRelationLabel(candidate.relation)} -&gt;</span>
         <span className="font-semibold text-slate-900">{formatEntityLabel(candidate.tail)}</span>
       </div>
       {generationMode ? (

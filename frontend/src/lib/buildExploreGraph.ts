@@ -1,5 +1,4 @@
-// Explore-mode graphs: richer, real cluster-context slices laid out with dagre.
-// Guided-mode graphs stay focused (see buildCandidateGraph / buildValidationGraph).
+// Explore-mode graphs: richer local context slices laid out with dagre.
 
 import dagre from "@dagrejs/dagre";
 import { formatEntityLabel, formatRelationLabel } from "./formatKgLabel";
@@ -32,10 +31,10 @@ function roleToKind(role: string): PGraphNodeKind {
 }
 
 function statusToEdgeKind(status: string): PGraphEdgeKind {
-  const s = (status || "").toLowerCase();
-  if (s === "accepted") return "accepted";
-  if (s === "rejected" || s === "removed") return "rejected";
-  if (s === "candidate" || s === "kept") return "candidate";
+  const normalized = (status || "").toLowerCase();
+  if (normalized === "accepted") return "accepted";
+  if (normalized === "rejected" || normalized === "removed") return "rejected";
+  if (normalized === "candidate" || normalized === "kept") return "candidate";
   return "known";
 }
 
@@ -44,25 +43,25 @@ function layout(
   rawEdges: PGraphEdge[],
   rankdir: "LR" | "TB" = "TB",
 ): PresentationGraph {
-  const g = new dagre.graphlib.Graph();
-  g.setDefaultEdgeLabel(() => ({}));
-  g.setGraph({ rankdir, nodesep: 44, ranksep: 120, marginx: 28, marginy: 28 });
+  const graph = new dagre.graphlib.Graph();
+  graph.setDefaultEdgeLabel(() => ({}));
+  graph.setGraph({ rankdir, nodesep: 44, ranksep: 120, marginx: 28, marginy: 28 });
 
-  for (const n of rawNodes) {
-    g.setNode(n.id, { width: nodeWidth(n.label), height: NODE_H });
+  for (const node of rawNodes) {
+    graph.setNode(node.id, { width: nodeWidth(node.label), height: NODE_H });
   }
-  for (const e of rawEdges) {
-    if (g.hasNode(e.source) && g.hasNode(e.target)) g.setEdge(e.source, e.target);
+  for (const edge of rawEdges) {
+    if (graph.hasNode(edge.source) && graph.hasNode(edge.target)) graph.setEdge(edge.source, edge.target);
   }
-  dagre.layout(g);
+  dagre.layout(graph);
 
   let maxX = 0;
   let maxY = 0;
-  const nodes: PGraphNode[] = rawNodes.map((n) => {
-    const pos = g.node(n.id);
-    maxX = Math.max(maxX, pos.x);
-    maxY = Math.max(maxY, pos.y);
-    return { ...n, x: pos.x, y: pos.y };
+  const nodes: PGraphNode[] = rawNodes.map((node) => {
+    const position = graph.node(node.id);
+    maxX = Math.max(maxX, position.x);
+    maxY = Math.max(maxY, position.y);
+    return { ...node, x: position.x, y: position.y };
   });
 
   return {
@@ -73,7 +72,6 @@ function layout(
   };
 }
 
-/** Full cluster-context slice for Explore mode on the Candidate Generation screen. */
 export function buildExploreGraph(
   scenario: PresentationScenario,
   selectedCandidate: PresentationCandidate | null,
@@ -84,32 +82,29 @@ export function buildExploreGraph(
     return { width: 640, height: 320, nodes: [], edges: [] };
   }
 
-  const rawNodes = guidedNodes.map((n) => ({
-    id: n.id,
-    label: formatEntityLabel(n.id, n.label),
-    kind: roleToKind(n.role),
+  const rawNodes = guidedNodes.map((node) => ({
+    id: node.id,
+    label: formatEntityLabel(node.id, node.label),
+    kind: roleToKind(node.role),
     highlight:
       selectedCandidate != null &&
-      (n.id === selectedCandidate.head || n.id === selectedCandidate.tail),
+      (node.id === selectedCandidate.head || node.id === selectedCandidate.tail),
   }));
 
-  const rawEdges: PGraphEdge[] = guidedEdges.map((e) => ({
-    id: e.id,
-    source: e.source,
-    target: e.target,
-    label: e.candidateId ? formatRelationLabel(e.relation) : "",
-    kind: e.candidateId ? statusToEdgeKind(e.status) : statusToEdgeKind(e.status),
-    highlight: selectedCandidate != null && e.candidateId === selectedCandidate.id,
+  const rawEdges: PGraphEdge[] = guidedEdges.map((edge) => ({
+    id: edge.id,
+    source: edge.source,
+    target: edge.target,
+    label: edge.candidateId ? formatRelationLabel(edge.relation) : "",
+    kind: statusToEdgeKind(edge.status),
+    highlight: selectedCandidate != null && edge.candidateId === selectedCandidate.id,
   }));
 
   const result = layout(rawNodes, rawEdges);
-  if (scenario.cluster.sharedRelation && scenario.cluster.sharedTail) {
-    result.caption = `Shared pattern: ( · , ${formatRelationLabel(scenario.cluster.sharedRelation)}, ${formatEntityLabel(scenario.cluster.sharedTail)} )`;
-  }
+  result.caption = "Local graph context";
   return result;
 }
 
-/** Local neighbourhood around a candidate's head & tail for validation Explore mode. */
 export function buildNeighbourhoodGraph(
   scenario: PresentationScenario,
   candidate: PresentationCandidate | null,
@@ -119,15 +114,14 @@ export function buildNeighbourhoodGraph(
   const seeds = new Set<string>([candidate.head, candidate.tail]);
   if (candidate.sharedTail) seeds.add(candidate.sharedTail);
 
-  // 1-hop neighbourhood of the seed nodes from the guided slice.
   const keep = new Set<string>(seeds);
-  for (const e of scenario.guided.edges) {
-    if (seeds.has(e.source)) keep.add(e.target);
-    if (seeds.has(e.target)) keep.add(e.source);
+  for (const edge of scenario.guided.edges) {
+    if (seeds.has(edge.source)) keep.add(edge.target);
+    if (seeds.has(edge.target)) keep.add(edge.source);
   }
 
-  const labelById = new Map(scenario.guided.nodes.map((n) => [n.id, n.label]));
-  const roleById = new Map(scenario.guided.nodes.map((n) => [n.id, n.role]));
+  const labelById = new Map(scenario.guided.nodes.map((node) => [node.id, node.label]));
+  const roleById = new Map(scenario.guided.nodes.map((node) => [node.id, node.role]));
 
   const rawNodes = Array.from(keep).map((id) => ({
     id,
@@ -142,22 +136,21 @@ export function buildNeighbourhoodGraph(
   }));
 
   const rawEdges: PGraphEdge[] = [];
-  for (const e of scenario.guided.edges) {
-    if (!keep.has(e.source) || !keep.has(e.target)) continue;
+  for (const edge of scenario.guided.edges) {
+    if (!keep.has(edge.source) || !keep.has(edge.target)) continue;
     rawEdges.push({
-      id: e.id,
-      source: e.source,
-      target: e.target,
-      label: e.candidateId ? formatRelationLabel(e.relation) : "",
-      kind: statusToEdgeKind(e.status),
-      highlight: e.candidateId === candidate.id,
+      id: edge.id,
+      source: edge.source,
+      target: edge.target,
+      label: edge.candidateId ? formatRelationLabel(edge.relation) : "",
+      kind: statusToEdgeKind(edge.status),
+      highlight: edge.candidateId === candidate.id,
     });
   }
-  // Ensure the candidate edge itself is present and styled.
-  const candEdgeId = `cand-${candidate.id}`;
-  if (!rawEdges.some((e) => e.highlight)) {
+
+  if (!rawEdges.some((edge) => edge.highlight)) {
     rawEdges.push({
-      id: candEdgeId,
+      id: `cand-${candidate.id}`,
       source: candidate.head,
       target: candidate.tail,
       label: formatRelationLabel(candidate.relation),
@@ -165,13 +158,12 @@ export function buildNeighbourhoodGraph(
       highlight: true,
     });
   } else {
-    for (const e of rawEdges) {
-      if (e.highlight) e.kind = candidateEdgeKind;
+    for (const edge of rawEdges) {
+      if (edge.highlight) edge.kind = candidateEdgeKind;
     }
   }
 
-  // Guarantee the tail node exists even if the candidate edge was synthetic.
-  if (!rawNodes.some((n) => n.id === candidate.tail)) {
+  if (!rawNodes.some((node) => node.id === candidate.tail)) {
     rawNodes.push({
       id: candidate.tail,
       label: formatEntityLabel(candidate.tail),

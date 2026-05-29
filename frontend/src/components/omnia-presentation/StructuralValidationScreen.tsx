@@ -1,6 +1,6 @@
 import { InteractiveGraph } from "./InteractiveGraph";
 import { GraphInspector } from "./GraphInspector";
-import { SummaryMetricCards } from "./SummaryMetricCards";
+import { SummaryMetricCards, type MetricItem } from "./SummaryMetricCards";
 import { CollapsibleDetails } from "./CollapsibleDetails";
 import type { GraphInteraction } from "./screenInteraction";
 import { buildValidationGraph } from "../../lib/buildValidationGraph";
@@ -9,7 +9,12 @@ import { formatEntityLabel, formatRelationLabel } from "../../lib/formatKgLabel"
 import type { PresentationCandidate, PresentationScenario } from "../../lib/omniaPresentationData";
 
 function fmt(value: number | null | undefined): string {
-  return value == null ? "—" : value.toLocaleString();
+  return value == null ? "Not included" : value.toLocaleString();
+}
+
+function candidatePassed(candidate: PresentationCandidate | null): boolean | null {
+  if (!candidate || candidate.distance == null || candidate.threshold == null) return null;
+  return candidate.distance <= candidate.threshold;
 }
 
 function TripleDisplay({ candidate }: { candidate: PresentationCandidate }) {
@@ -41,57 +46,69 @@ export function StructuralValidationScreen({
   gi: GraphInteraction;
 }) {
   const { metrics } = scenario;
-  const accepted = metrics.filteringAccepted ?? 0;
-  const queue = metrics.filterQueueCount ?? metrics.generatedCandidates ?? 0;
-  const filteringRate = queue > 0 ? Math.round((accepted / queue) * 100) : null;
-
+  const passedCount = metrics.filteringAccepted;
+  const queue = metrics.filterQueueCount ?? metrics.generatedCandidates;
+  const filteringRate = queue && passedCount != null ? Math.round((passedCount / queue) * 100) : null;
   const ranked = [...scenario.candidates]
-    .filter((c) => c.distance != null)
+    .filter((candidate) => candidate.distance != null)
     .sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0));
-  const rank = selectedCandidate ? ranked.findIndex((c) => c.id === selectedCandidate.id) + 1 : 0;
-
-  const hasScore = selectedCandidate?.distance != null && selectedCandidate?.threshold != null;
-  const passed = hasScore ? (selectedCandidate!.distance as number) <= (selectedCandidate!.threshold as number) : null;
-  const edgeKind = passed === false ? "rejected" : "candidate";
+  const rank = selectedCandidate ? ranked.findIndex((candidate) => candidate.id === selectedCandidate.id) + 1 : 0;
+  const passed = candidatePassed(selectedCandidate);
+  const edgeKind = passed === false ? "rejected" : passed === true ? "accepted" : "candidate";
   const graph =
     gi.mode === "explore"
       ? buildNeighbourhoodGraph(scenario, selectedCandidate, edgeKind)
       : buildValidationGraph(selectedCandidate, edgeKind);
 
-  return (
-    <div className="space-y-4">
-      <SummaryMetricCards
-        items={[
-          { label: "Generated candidates", value: fmt(metrics.generatedCandidates) },
-          { label: "Passed structural validation", value: fmt(metrics.filteringAccepted), tone: "green" },
-          { label: "Filtering rate", value: filteringRate == null ? "—" : `${filteringRate}%` },
+  const metricsCards: MetricItem[] = [
+    { label: "Generated candidates", value: fmt(metrics.generatedCandidates) },
+    { label: "Passed structural validation", value: fmt(passedCount), tone: "green" },
+    ...(filteringRate != null ? [{ label: "Filtering rate", value: `${filteringRate}%` } as MetricItem] : []),
+    ...(selectedCandidate?.distance != null
+      ? [
           {
             label: "Selected candidate score",
-            value: selectedCandidate?.distance != null ? selectedCandidate.distance.toFixed(2) : "—",
-            tone: "blue",
+            value: selectedCandidate.distance.toFixed(4),
+            tone: "blue" as const,
           },
-          { label: "Ranking position", value: rank > 0 ? `#${rank} of ${ranked.length}` : "—" },
-        ]}
-      />
+        ]
+      : []),
+    ...(rank > 0 ? [{ label: "Ranking position", value: `#${rank} of ${ranked.length}` } as MetricItem] : []),
+  ];
+
+  const details = [
+    metrics.filteringModel ? ["Model", metrics.filteringModel] : null,
+    selectedCandidate?.distance != null ? ["Distance score", selectedCandidate.distance.toFixed(4)] : null,
+    selectedCandidate?.threshold != null
+      ? ["Threshold", selectedCandidate.threshold.toFixed(4)]
+      : metrics.threshold != null
+        ? ["Threshold", metrics.threshold.toFixed(4)]
+        : null,
+    rank > 0 ? ["Rank", `#${rank} of ${ranked.length}`] : null,
+    passed != null ? ["Status", passed ? "Passed" : "Removed"] : null,
+  ].filter((item): item is [string, string] => Boolean(item));
+
+  return (
+    <div className="space-y-4">
+      <SummaryMetricCards items={metricsCards} />
 
       {!selectedCandidate ? (
         <div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-sm text-slate-500">
-          No candidate is selected for this dataset. Structural validation runs on generated candidates; this prepared
-          slice did not retain one to inspect.
+          No candidate is selected for this dataset. Structural validation runs after candidate generation.
         </div>
       ) : (
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <p className="text-xs font-medium text-slate-500">
-                {gi.mode === "explore" ? "Local neighbourhood — click nodes and edges." : "Guided view — candidate in local structure."}
+                {gi.mode === "explore" ? "Local neighbourhood. Click nodes and edges." : "Candidate in local graph context."}
               </p>
               <button
                 type="button"
                 onClick={() => gi.setMode(gi.mode === "explore" ? "guided" : "explore")}
                 className="rounded-lg border border-slate-300 px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-slate-100"
               >
-                {gi.mode === "explore" ? "Back to guided view" : "Explore candidate context"}
+                {gi.mode === "explore" ? "Back to Guided View" : "Explore candidate context"}
               </button>
             </div>
             <InteractiveGraph
@@ -117,19 +134,26 @@ export function StructuralValidationScreen({
 
           <div className="space-y-3">
             <TripleDisplay candidate={selectedCandidate} />
-            {hasScore ? (
+            {passed != null ? (
               <div
-                className={`rounded-xl border px-3 py-2.5 text-sm font-medium ${
+                className={`rounded-xl border px-3 py-2.5 text-sm ${
                   passed
                     ? "border-emerald-200 bg-emerald-50 text-emerald-800"
                     : "border-rose-200 bg-rose-50 text-rose-800"
                 }`}
               >
-                {passed ? "✓ Passed structural validation" : "✗ Removed by structural validation"}
+                <p className="font-semibold">
+                  {passed ? "Passed structural validation" : "Removed by structural validation"}
+                </p>
+                <p className="mt-1">
+                  {passed
+                    ? "This candidate passed structural validation and is eligible for semantic validation."
+                    : "This candidate was removed because it did not fit the graph structure strongly enough."}
+                </p>
               </div>
             ) : (
               <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-600">
-                Structural score is not included in this prepared sample.
+                Structural score is not included for this prepared sample.
               </div>
             )}
           </div>
@@ -137,17 +161,15 @@ export function StructuralValidationScreen({
       )}
 
       <CollapsibleDetails label="Show technical details">
-        <div className="grid gap-2 text-sm sm:grid-cols-2">
-          <Detail k="Model" v={metrics.filteringModel ?? "TransE"} />
-          <Detail k="Distance score" v={selectedCandidate?.distance != null ? selectedCandidate.distance.toFixed(4) : "Not included"} />
-          <Detail k="Threshold (τ)" v={selectedCandidate?.threshold != null ? selectedCandidate.threshold.toFixed(4) : metrics.threshold?.toFixed(4) ?? "Not included"} />
-          <Detail k="Rank" v={rank > 0 ? `#${rank} of ${ranked.length}` : "Not included"} />
-          <Detail k="Status" v={passed == null ? "Not included" : passed ? "Passed" : "Removed"} />
-        </div>
-        <p className="mt-3 text-xs text-slate-500">
-          TransE scores each candidate by how close embedding(head) + embedding(relation) is to embedding(tail). A lower
-          distance below the threshold τ means the candidate fits the graph structure.
-        </p>
+        {details.length ? (
+          <div className="grid gap-2 text-sm sm:grid-cols-2">
+            {details.map(([key, value]) => (
+              <Detail key={key} k={key} v={value} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-slate-500">No additional technical fields are included for this sample.</p>
+        )}
       </CollapsibleDetails>
 
       <div className="flex justify-end">
@@ -156,7 +178,7 @@ export function StructuralValidationScreen({
           onClick={onContinue}
           className="rounded-xl bg-slate-900 px-6 py-2.5 text-sm font-semibold text-white hover:bg-slate-800"
         >
-          Continue to Semantic Validation →
+          Continue to Semantic Validation
         </button>
       </div>
     </div>
@@ -165,7 +187,7 @@ export function StructuralValidationScreen({
 
 function Detail({ k, v }: { k: string; v: string }) {
   return (
-    <div className="flex items-center justify-between rounded-lg border border-slate-100 bg-slate-50 px-3 py-2">
+    <div className="flex items-center justify-between gap-3 rounded-lg border border-slate-100 bg-slate-50 px-3 py-2">
       <span className="text-slate-500">{k}</span>
       <span className="font-medium text-slate-800">{v}</span>
     </div>

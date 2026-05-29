@@ -21,6 +21,7 @@ import {
   type OmniaCandidateExplorer,
 } from "../lib/omniaCandidateExplorer";
 import {
+  loadDemoScenarioIndex,
   loadPresentationScenario,
   PRESENTATION_DATASET_ORDER,
   type PresentationDatasetId,
@@ -80,8 +81,12 @@ export function OmniaPresentationDemo() {
     setScenario(null);
     setExplorer(null);
     setLoadError(null);
-    Promise.all([loadPresentationScenario(datasetId), loadOmniaCandidateExplorer(datasetId)])
-      .then(([data, ex]) => {
+    Promise.all([
+      loadDemoScenarioIndex().catch(() => null),
+      loadPresentationScenario(datasetId),
+      loadOmniaCandidateExplorer(datasetId),
+    ])
+      .then(([, data, ex]) => {
         if (cancelled) return;
         setScenario(data);
         setExplorer(ex);
@@ -125,6 +130,14 @@ export function OmniaPresentationDemo() {
   );
   const rejectedCount = useMemo(
     () => Object.values(decisions).filter((d) => d === "rejected").length,
+    [decisions],
+  );
+  const uncertainCount = useMemo(
+    () => Object.values(decisions).filter((d) => d === "uncertain").length,
+    [decisions],
+  );
+  const correctedCount = useMemo(
+    () => Object.values(decisions).filter((d) => d === "corrected").length,
     [decisions],
   );
 
@@ -192,7 +205,6 @@ export function OmniaPresentationDemo() {
     <GraphNavPanel
       scenario={scenario}
       mode={graphMode}
-      hideClusterHint={activeScreen === "candidateGeneration"}
       onModeChange={(mode) => {
         setGraphMode(mode);
         setFitKey((k) => k + 1);
@@ -219,8 +231,8 @@ export function OmniaPresentationDemo() {
         <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800">
           Could not load the prepared demo data: {loadError}
           <p className="mt-2 text-xs text-rose-600">
-            Run <code className="font-mono">python scripts/build_presentation_data.py</code> so that
-            <code className="font-mono"> frontend/public/omnia-presentation/</code> is populated.
+            Ensure <code className="font-mono">frontend/public/demo-scenarios/</code> contains the exported
+            OMNIA result JSON files.
           </p>
         </div>
       </PresentationShell>
@@ -237,7 +249,7 @@ export function OmniaPresentationDemo() {
         onBackToStart={() => setScreen("getStarted")}
         datasetLabel={datasetId}
       >
-        <p className="text-sm text-slate-500">Loading prepared demo…</p>
+        <p className="text-sm text-slate-500">Loading prepared demo...</p>
       </PresentationShell>
     );
   }
@@ -277,6 +289,8 @@ export function OmniaPresentationDemo() {
           decision={selectedCandidate ? decisions[selectedCandidate.id] ?? "none" : "none"}
           acceptedCount={acceptedCount}
           rejectedCount={rejectedCount}
+          uncertainCount={uncertainCount}
+          correctedCount={correctedCount}
           onDecide={(decision) =>
             selectedCandidate &&
             setDecisions((prev) => ({ ...prev, [selectedCandidate.id]: decision }))

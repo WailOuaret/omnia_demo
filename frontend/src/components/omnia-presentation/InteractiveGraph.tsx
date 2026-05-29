@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Background,
   BaseEdge,
@@ -112,7 +112,13 @@ function FloatingEdge({ id, source, target, markerEnd, data }: EdgeProps) {
   const kind = (data?.kind as PGraphEdgeKind) ?? "known";
   const highlight = Boolean(data?.highlight);
   const color = EDGE_COLOR[kind];
-  const dashed = kind === "candidate" || kind === "proposed" || kind === "rejected" || kind === "uncertain";
+  const dashed =
+    kind === "candidate" ||
+    kind === "proposed" ||
+    kind === "accepted" ||
+    kind === "rejected" ||
+    kind === "uncertain" ||
+    kind === "corrected";
   const label = data?.label as string | undefined;
   const mx = (sp.x + tp.x) / 2;
   const my = (sp.y + tp.y) / 2;
@@ -166,14 +172,18 @@ function toFlowNodes(graph: PresentationGraph, selectedNodeId: string | null): N
   }));
 }
 
-function toFlowEdges(graph: PresentationGraph, selectedEdgeId: string | null): Edge[] {
+function toFlowEdges(graph: PresentationGraph, selectedEdgeId: string | null, hoveredEdgeId: string | null): Edge[] {
   return graph.edges.map((e) => ({
     id: e.id,
     source: e.source,
     target: e.target,
     type: "floating",
     markerEnd: { type: "arrowclosed" as const, color: EDGE_COLOR[e.kind], width: 16, height: 16 },
-    data: { kind: e.kind, label: e.label, highlight: e.highlight || e.id === selectedEdgeId },
+    data: {
+      kind: e.kind,
+      label: e.highlight || e.id === selectedEdgeId || e.id === hoveredEdgeId ? e.label : undefined,
+      highlight: e.highlight || e.id === selectedEdgeId || e.id === hoveredEdgeId,
+    },
   }));
 }
 
@@ -195,8 +205,12 @@ function GraphInner({
   fitKey: number;
 }) {
   const rf = useReactFlow();
+  const [hoveredEdgeId, setHoveredEdgeId] = useState<string | null>(null);
   const nodes = useMemo(() => toFlowNodes(graph, selectedNodeId), [graph, selectedNodeId]);
-  const edges = useMemo(() => toFlowEdges(graph, selectedEdgeId), [graph, selectedEdgeId]);
+  const edges = useMemo(
+    () => toFlowEdges(graph, selectedEdgeId, hoveredEdgeId),
+    [graph, selectedEdgeId, hoveredEdgeId],
+  );
 
   useEffect(() => {
     const handle = window.setTimeout(() => rf.fitView({ padding: 0.2, duration: 400 }), 60);
@@ -217,6 +231,8 @@ function GraphInner({
       proOptions={{ hideAttribution: true }}
       onNodeClick={(_, node) => onNodeClick(node.id)}
       onEdgeClick={(_, edge) => onEdgeClick(edge.id)}
+      onEdgeMouseEnter={(_, edge) => setHoveredEdgeId(edge.id)}
+      onEdgeMouseLeave={() => setHoveredEdgeId(null)}
       onPaneClick={onPaneClick}
       nodesConnectable={false}
       edgesFocusable

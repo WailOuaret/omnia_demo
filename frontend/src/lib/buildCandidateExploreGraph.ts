@@ -6,6 +6,8 @@ import type { ExplorerTriple, KnownEdge, OmniaCandidateExplorer } from "./omniaC
 
 const W = 760;
 const H = 420;
+const GUIDED_EDGE_CAP = 8;
+const EXPLORE_EDGE_CAP = 14;
 
 function radialPlace(
   centerId: string,
@@ -68,6 +70,18 @@ function collectNeighbours(
   return new Set([...keep].slice(0, cap));
 }
 
+function limitedWithSelected<T extends { id: string }>(
+  pool: T[],
+  cap: number,
+  selectedId: string | null,
+): T[] {
+  const first = pool.slice(0, cap);
+  if (!selectedId || first.some((item) => item.id === selectedId)) return first;
+  const selected = pool.find((item) => item.id === selectedId);
+  if (!selected) return first;
+  return [...first.slice(0, Math.max(0, cap - 1)), selected];
+}
+
 export function buildEntityExplorationGraph(
   explorer: OmniaCandidateExplorer,
   entityId: string,
@@ -82,7 +96,9 @@ export function buildEntityExplorationGraph(
   const cap = options.guided ? 24 : 38;
   for (const id of collectNeighbours(entityId, explorer.knownEdges, hops, cap)) nodeIds.add(id);
 
-  const candidates = (entry?.candidateTriples ?? []).slice(0, options.guided ? 8 : 14);
+  const candidateCap = options.guided ? GUIDED_EDGE_CAP : EXPLORE_EDGE_CAP;
+  const candidatePool = entry?.candidateTriples ?? [];
+  const candidates = limitedWithSelected(candidatePool, candidateCap, selectedCandidateId);
   for (const c of candidates) {
     nodeIds.add(c.head);
     nodeIds.add(c.tail);
@@ -101,6 +117,7 @@ export function buildEntityExplorationGraph(
   const nodes = radialPlace(entityId, nodeIds, explorer.labels, true, highlightIds);
   const edges: PGraphEdge[] = [];
 
+  const knownCandidates: PGraphEdge[] = [];
   for (const edge of explorer.knownEdges) {
     if (!nodeIds.has(edge.source) || !nodeIds.has(edge.target)) continue;
     if (edge.source !== entityId && edge.target !== entityId && options.guided) {
@@ -113,7 +130,7 @@ export function buildEntityExplorationGraph(
       );
       if (!touchesCandidate) continue;
     }
-    edges.push({
+    knownCandidates.push({
       id: edge.id,
       source: edge.source,
       target: edge.target,
@@ -121,6 +138,8 @@ export function buildEntityExplorationGraph(
       kind: "known",
     });
   }
+  const knownCap = options.guided ? GUIDED_EDGE_CAP : EXPLORE_EDGE_CAP;
+  edges.push(...knownCandidates.slice(0, knownCap));
 
   for (const c of candidates) {
     if (!nodeIds.has(c.head) || !nodeIds.has(c.tail)) continue;
@@ -141,6 +160,10 @@ export function buildEntityExplorationGraph(
     nodes,
     edges,
     caption: `Selected entity: ${formatEntityLabel(entityId, explorer.labels.get(entityId))}`,
+    overflow: {
+      knownMore: Math.max(0, knownCandidates.length - knownCap),
+      candidateMore: Math.max(0, candidatePool.length - candidates.length),
+    },
   };
 }
 
@@ -151,16 +174,19 @@ export function buildRelationExplorationGraph(
   options: { guided: boolean },
 ): PresentationGraph {
   const entry = explorer.relationIndex.get(relationId);
-  const candidates = (entry?.candidateTriples ?? [])
+  const candidateCap = options.guided ? GUIDED_EDGE_CAP : EXPLORE_EDGE_CAP;
+  const candidatePool = (entry?.candidateTriples ?? [])
     .filter((c) => explorer.demoNodeIds.has(c.head) || explorer.demoNodeIds.has(c.tail))
-    .slice(0, options.guided ? 10 : 18);
+  const candidates = limitedWithSelected(candidatePool, candidateCap, selectedCandidateId);
 
   const nodeIds = new Set<string>();
   for (const c of candidates) {
     nodeIds.add(c.head);
     nodeIds.add(c.tail);
   }
-  for (const t of entry?.knownTriples ?? []) {
+  const knownCap = options.guided ? GUIDED_EDGE_CAP : EXPLORE_EDGE_CAP;
+  const knownPool = entry?.knownTriples ?? [];
+  for (const t of knownPool.slice(0, knownCap)) {
     if (explorer.demoNodeIds.has(t.head) || explorer.demoNodeIds.has(t.tail)) {
       nodeIds.add(t.head);
       nodeIds.add(t.tail);
@@ -180,7 +206,7 @@ export function buildRelationExplorationGraph(
   const nodes = radialPlace(centerId, nodeIds, explorer.labels, false, highlightIds);
   const edges: PGraphEdge[] = [];
 
-  for (const t of entry?.knownTriples ?? []) {
+  for (const t of knownPool.slice(0, knownCap)) {
     if (!nodeIds.has(t.head) || !nodeIds.has(t.tail)) continue;
     edges.push({
       id: `known-${t.id}`,
@@ -208,6 +234,10 @@ export function buildRelationExplorationGraph(
     nodes,
     edges,
     caption: `Relation: ${formatRelationLabel(relationId)}`,
+    overflow: {
+      knownMore: Math.max(0, knownPool.length - knownCap),
+      candidateMore: Math.max(0, candidatePool.length - candidates.length),
+    },
   };
 }
 
