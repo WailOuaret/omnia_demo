@@ -1,10 +1,9 @@
 import type { ReactNode } from "react";
 import { DatasetSelectorCard } from "./DatasetSelectorCard";
-import { StepNavigator, WORKFLOW_LABELS, WORKFLOW_ORDER, type WorkflowScreen } from "./StepNavigator";
+import { WORKFLOW_LABELS, WORKFLOW_ORDER, type WorkflowScreen } from "./StepNavigator";
 import type { PresentationDatasetId } from "../../lib/omniaPresentationData";
 
 export function PresentationLayout({
-  datasetLabel,
   datasetId,
   onDatasetChange,
   activeScreen,
@@ -12,10 +11,8 @@ export function PresentationLayout({
   onBackToStart,
   title,
   subtitle,
-  graphNav,
   children,
 }: {
-  datasetLabel: string;
   datasetId: PresentationDatasetId;
   onDatasetChange: (id: PresentationDatasetId) => void;
   activeScreen: WorkflowScreen;
@@ -23,7 +20,6 @@ export function PresentationLayout({
   onBackToStart: () => void;
   title: string;
   subtitle: string;
-  graphNav?: ReactNode;
   children: ReactNode;
 }) {
   const index = WORKFLOW_ORDER.indexOf(activeScreen);
@@ -33,15 +29,15 @@ export function PresentationLayout({
   return (
     <div className="omnia-presentation min-h-screen bg-slate-50 text-slate-900">
       <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-4 px-6 py-3">
+        <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-between gap-3 px-6 py-3">
           <button type="button" onClick={onBackToStart} className="flex items-center gap-2 text-left">
             <span className="text-lg font-bold tracking-tight text-slate-900">OMNIA+</span>
             <span className="hidden text-xs text-slate-400 sm:inline">Interactive KG Completion</span>
           </button>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
-              {datasetLabel}
-            </span>
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="w-44">
+              <DatasetSelectorCard selected={datasetId} onSelect={onDatasetChange} variant="compact" />
+            </div>
             <button
               type="button"
               disabled={!canPrev}
@@ -62,32 +58,13 @@ export function PresentationLayout({
         </div>
       </header>
 
-      <div className="mx-auto grid max-w-[1280px] grid-cols-1 gap-6 px-6 py-6 lg:grid-cols-[240px_minmax(0,1fr)]">
-        <aside className="space-y-5">
-          <div>
-            <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-slate-400">Dataset</p>
-            <DatasetSelectorCard selected={datasetId} onSelect={onDatasetChange} variant="compact" />
-          </div>
-          <div>
-            <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-slate-400">Workflow</p>
-            <StepNavigator active={activeScreen} onSelect={onScreenChange} />
-          </div>
-          {graphNav ? (
-            <div>
-              <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-slate-400">Graph</p>
-              {graphNav}
-            </div>
-          ) : null}
-        </aside>
-
-        <main className="min-w-0 space-y-4">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900">{title}</h1>
-            <p className="mt-1 text-sm text-slate-600">{subtitle}</p>
-          </div>
-          {children}
-        </main>
-      </div>
+      <main className="mx-auto max-w-[1280px] space-y-4 px-6 py-6">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">{title}</h1>
+          <p className="mt-1 text-sm text-slate-600">{subtitle}</p>
+        </div>
+        {children}
+      </main>
     </div>
   );
 }

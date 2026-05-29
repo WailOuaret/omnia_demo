@@ -250,11 +250,3 @@ export function buildRelationExplorationGraph(
   };
 }
 
-export function buildCandidateFocusGraph(
-  explorer: OmniaCandidateExplorer,
-  candidateId: string,
-): PresentationGraph | null {
-  const c = explorer.candidateIndex.get(candidateId);
-  if (!c) return null;
-  return buildEntityExplorationGraph(explorer, c.head, candidateId, { guided: true, extraHop: false });
-}

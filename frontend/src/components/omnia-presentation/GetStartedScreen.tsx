@@ -1,22 +1,27 @@
-import { DatasetSelectorCard } from "./DatasetSelectorCard";
-import type { PresentationDatasetId } from "../../lib/omniaPresentationData";
-
 const STEPS = [
-  { n: 1, title: "Select a knowledge graph dataset" },
-  { n: 2, title: "Generate candidate relations" },
-  { n: 3, title: "Validate candidate relations" },
-  { n: 4, title: "Refine the knowledge graph" },
+  {
+    n: 1,
+    title: "Select a knowledge graph dataset",
+    detail: "Choose a benchmark graph from the demo header once you enter the workflow.",
+  },
+  {
+    n: 2,
+    title: "Generate candidate relations",
+    detail: "OMNIA proposes missing triples based on graph structure and embeddings.",
+  },
+  {
+    n: 3,
+    title: "Validate candidate relations",
+    detail: "Structural and semantic checks filter plausible candidates before refinement.",
+  },
+  {
+    n: 4,
+    title: "Refine the knowledge graph",
+    detail: "Accept or reject validated candidates to update the graph.",
+  },
 ];
 
-export function GetStartedScreen({
-  selectedDataset,
-  onDatasetChange,
-  onContinue,
-}: {
-  selectedDataset: PresentationDatasetId;
-  onDatasetChange: (id: PresentationDatasetId) => void;
-  onContinue: () => void;
-}) {
+export function GetStartedScreen({ onContinue }: { onContinue: () => void }) {
   return (
     <div className="omnia-presentation min-h-screen bg-slate-50 text-slate-900">
       <div className="mx-auto max-w-3xl px-6 py-12">
@@ -25,21 +30,22 @@ export function GetStartedScreen({
           Explore missing relations, validate them, and refine the knowledge graph.
         </p>
 
-        <div className="mt-8 grid gap-3 sm:grid-cols-2">
+        <ol className="mt-8 space-y-5">
           {STEPS.map((step) => (
-            <div key={step.n} className="flex items-start gap-3 rounded-xl border border-slate-200 bg-white p-4">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-900 text-sm font-semibold text-white">
+            <li key={step.n} className="flex gap-4">
+              <span
+                aria-hidden
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-200 text-sm font-semibold text-slate-700"
+              >
                 {step.n}
               </span>
-              <p className="pt-1 text-sm font-medium text-slate-800">{step.title}</p>
-            </div>
+              <div>
+                <p className="text-sm font-medium text-slate-800">{step.title}</p>
+                <p className="mt-1 text-sm leading-relaxed text-slate-500">{step.detail}</p>
+              </div>
+            </li>
           ))}
-        </div>
-
-        <div className="mt-8">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">Dataset</p>
-          <DatasetSelectorCard selected={selectedDataset} onSelect={onDatasetChange} variant="compact" />
-        </div>
+        </ol>
 
         <div className="mt-10 flex justify-end">
           <button

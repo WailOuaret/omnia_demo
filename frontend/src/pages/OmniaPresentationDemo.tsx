@@ -7,7 +7,7 @@ import { CandidateGenerationScreen } from "../components/omnia-presentation/Cand
 import { StructuralValidationScreen } from "../components/omnia-presentation/StructuralValidationScreen";
 import { SemanticValidationScreen } from "../components/omnia-presentation/SemanticValidationScreen";
 import { GraphRefinementScreen } from "../components/omnia-presentation/GraphRefinementScreen";
-import { GraphNavPanel, type GraphMode } from "../components/omnia-presentation/GraphNavPanel";
+import type { GraphMode } from "../components/omnia-presentation/GraphNavPanel";
 import type { GraphInteraction, InspectTarget } from "../components/omnia-presentation/screenInteraction";
 import {
   WORKFLOW_LABELS,
@@ -176,6 +176,12 @@ export function OmniaPresentationDemo() {
       },
       inspect,
       fitKey,
+      onFit: () => setFitKey((k) => k + 1),
+      onFocusNode: (id) => {
+        setGraphMode("explore");
+        setInspect({ type: "node", id });
+        setFitKey((k) => k + 1);
+      },
       onNodeClick: (id) => setInspect({ type: "node", id }),
       onEdgeClick: (id) => setInspect({ type: "edge", id }),
       onPaneClick: () => setInspect(null),
@@ -189,34 +195,11 @@ export function OmniaPresentationDemo() {
   }
 
   if (screen === "getStarted") {
-    return (
-      <GetStartedScreen
-        selectedDataset={datasetId}
-        onDatasetChange={onDatasetChange}
-        onContinue={() => setScreen("candidateGeneration")}
-      />
-    );
+    return <GetStartedScreen onContinue={() => setScreen("candidateGeneration")} />;
   }
 
   // Workflow screens share the guided layout.
   const activeScreen: WorkflowScreen = screen;
-
-  const graphNav = (
-    <GraphNavPanel
-      scenario={scenario}
-      mode={graphMode}
-      onModeChange={(mode) => {
-        setGraphMode(mode);
-        setFitKey((k) => k + 1);
-      }}
-      onFit={() => setFitKey((k) => k + 1)}
-      onFocusNode={(id) => {
-        setGraphMode("explore");
-        setInspect({ type: "node", id });
-        setFitKey((k) => k + 1);
-      }}
-    />
-  );
 
   if (loadError) {
     return (
@@ -226,7 +209,6 @@ export function OmniaPresentationDemo() {
         onDatasetChange={onDatasetChange}
         onScreenChange={goToWorkflow}
         onBackToStart={() => setScreen("getStarted")}
-        datasetLabel={datasetId}
       >
         <div className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-800">
           Could not load the prepared demo data: {loadError}
@@ -247,7 +229,6 @@ export function OmniaPresentationDemo() {
         onDatasetChange={onDatasetChange}
         onScreenChange={goToWorkflow}
         onBackToStart={() => setScreen("getStarted")}
-        datasetLabel={datasetId}
       >
         <p className="text-sm text-slate-500">Loading prepared demo...</p>
       </PresentationShell>
@@ -256,7 +237,6 @@ export function OmniaPresentationDemo() {
 
   return (
     <PresentationLayout
-      datasetLabel={scenario.label}
       datasetId={datasetId}
       onDatasetChange={onDatasetChange}
       activeScreen={activeScreen}
@@ -264,7 +244,6 @@ export function OmniaPresentationDemo() {
       onBackToStart={() => setScreen("getStarted")}
       title={WORKFLOW_LABELS[activeScreen]}
       subtitle={SCREEN_SUBTITLE[activeScreen]}
-      graphNav={graphNav}
     >
       {activeScreen === "candidateGeneration" ? (
         <CandidateGenerationScreen
@@ -318,7 +297,6 @@ export function OmniaPresentationDemo() {
 // Layout shell reused for loading / error states so the chrome stays consistent.
 function PresentationShell({
   datasetId,
-  datasetLabel,
   activeScreen,
   onDatasetChange,
   onScreenChange,
@@ -326,7 +304,6 @@ function PresentationShell({
   children,
 }: {
   datasetId: PresentationDatasetId;
-  datasetLabel: string;
   activeScreen: WorkflowScreen;
   onDatasetChange: (id: PresentationDatasetId) => void;
   onScreenChange: (screen: WorkflowScreen) => void;
@@ -335,7 +312,6 @@ function PresentationShell({
 }) {
   return (
     <PresentationLayout
-      datasetLabel={datasetLabel}
       datasetId={datasetId}
       onDatasetChange={onDatasetChange}
       activeScreen={activeScreen}

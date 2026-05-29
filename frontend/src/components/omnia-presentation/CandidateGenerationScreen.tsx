@@ -1,30 +1,158 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { InteractiveGraph } from "./InteractiveGraph";
+import { GraphToolbar } from "./GraphNavPanel";
 import { GraphInspector } from "./GraphInspector";
 import { CandidateTripleCard } from "./CandidateTripleCard";
 import { SummaryMetricCards } from "./SummaryMetricCards";
 import type { GraphInteraction } from "./screenInteraction";
 import {
-  buildCandidateFocusGraph,
   buildEntityExplorationGraph,
   buildRelationExplorationGraph,
 } from "../../lib/buildCandidateExploreGraph";
 import {
   explorerTripleToPresentation,
   filterCandidatesForExplore,
+  pickDefaultExploreEntity,
+  pickDefaultExploreRelation,
   searchEntities,
   searchRelations,
   type CandidateExploreBy,
+  type EntityIndexEntry,
   type OmniaCandidateExplorer,
+  type RelationIndexEntry,
 } from "../../lib/omniaCandidateExplorer";
 import { formatEntityLabel, formatRelationLabel } from "../../lib/formatKgLabel";
 import type { PresentationCandidate, PresentationScenario } from "../../lib/omniaPresentationData";
 
-const CHIP_DEFAULT = 10;
 const CANDIDATE_LIST_PAGE = 8;
+const AUTOCOMPLETE_LIMIT = 8;
+const SEARCH_DEBOUNCE_MS = 150;
 
 function fmt(value: number | null | undefined): string {
   return value == null ? "Not included" : value.toLocaleString();
+}
+
+function ExploreSearchAutocomplete({
+  value,
+  onChange,
+  onSelect,
+  placeholder,
+  explorer,
+  mode,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  onSelect: (id: string) => void;
+  placeholder: string;
+  explorer: OmniaCandidateExplorer;
+  mode: CandidateExploreBy;
+}) {
+  const [open, setOpen] = useState(false);
+  const [debouncedQuery, setDebouncedQuery] = useState(value);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setDebouncedQuery(value), SEARCH_DEBOUNCE_MS);
+    return () => window.clearTimeout(timer);
+  }, [value]);
+
+  const results = useMemo(() => {
+    if (mode === "entity") {
+      return searchEntities(explorer, debouncedQuery, AUTOCOMPLETE_LIMIT);
+    }
+    return searchRelations(explorer, debouncedQuery, AUTOCOMPLETE_LIMIT);
+  }, [explorer, debouncedQuery, mode]);
+
+  useEffect(() => {
+    if (!open) return;
+    const handlePointerDown = (event: MouseEvent) => {
+      if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handlePointerDown);
+    return () => document.removeEventListener("mousedown", handlePointerDown);
+  }, [open]);
+
+  const confirmFirstMatch = () => {
+    if (results.length > 0) {
+      onSelect(results[0].id);
+    }
+    setOpen(false);
+  };
+
+  const formatResultLabel = (item: EntityIndexEntry | RelationIndexEntry) => {
+    if (mode === "entity") {
+      const entity = item as EntityIndexEntry;
+      return formatEntityLabel(entity.id, explorer.labels.get(entity.id));
+    }
+    return formatRelationLabel(item.id);
+  };
+
+  return (
+    <div ref={rootRef} className="relative">
+      <div className="flex gap-2">
+        <input
+          value={value}
+          onChange={(event) => {
+            onChange(event.target.value);
+            setOpen(true);
+          }}
+          onFocus={() => setOpen(true)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              confirmFirstMatch();
+            } else if (event.key === "Escape") {
+              setOpen(false);
+            }
+          }}
+          placeholder={placeholder}
+          aria-expanded={open}
+          aria-haspopup="listbox"
+          autoComplete="off"
+          className="min-w-0 flex-1 rounded-lg border border-slate-200 px-3 py-2 text-sm"
+        />
+        <button
+          type="button"
+          onClick={confirmFirstMatch}
+          className="shrink-0 rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+        >
+          Find
+        </button>
+      </div>
+      {open ? (
+        <ul
+          role="listbox"
+          aria-label={mode === "entity" ? "Matching entities" : "Matching relations"}
+          className="absolute left-0 right-0 top-full z-20 mt-1 max-h-56 overflow-y-auto rounded-lg border border-slate-200 bg-white py-1 shadow-lg"
+        >
+          {results.length > 0 ? (
+            results.map((item) => (
+              <li key={item.id} role="option">
+                <button
+                  type="button"
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => {
+                    onSelect(item.id);
+                    setOpen(false);
+                  }}
+                  className="flex w-full items-center justify-between gap-2 px-3 py-1.5 text-left text-sm text-slate-700 hover:bg-slate-50"
+                >
+                  <span className="min-w-0 truncate">{formatResultLabel(item)}</span>
+                  <span className="shrink-0 text-xs text-slate-400">{item.candidateCount}</span>
+                </button>
+              </li>
+            ))
+          ) : (
+            <li className="px-3 py-2 text-xs text-slate-500">
+              {value.trim() ? "No matches found." : "No suggestions available."}
+            </li>
+          )}
+        </ul>
+      ) : null}
+    </div>
+  );
 }
 
 export function CandidateGenerationScreen({
@@ -46,12 +174,10 @@ export function CandidateGenerationScreen({
   const [exploreBy, setExploreBy] = useState<CandidateExploreBy>("entity");
   const [entityQuery, setEntityQuery] = useState("");
   const [relationQuery, setRelationQuery] = useState("");
-  const [candidateQuery, setCandidateQuery] = useState("");
   const [selectedEntityId, setSelectedEntityId] = useState<string | null>(null);
   const [selectedRelationId, setSelectedRelationId] = useState<string | null>(null);
   const [extraHop, setExtraHop] = useState(false);
   const [showLimit, setShowLimit] = useState(CANDIDATE_LIST_PAGE);
-  const [chipLimit, setChipLimit] = useState(CHIP_DEFAULT);
 
   useEffect(() => {
     if (!explorer) return;
@@ -59,35 +185,16 @@ export function CandidateGenerationScreen({
     setExploreBy("entity");
     setEntityQuery("");
     setRelationQuery("");
-    setCandidateQuery("");
-    setSelectedEntityId(explorer.topEntities[0]?.id ?? null);
-    setSelectedRelationId(explorer.topRelations[0]?.id ?? null);
+    setSelectedEntityId(null);
+    setSelectedRelationId(null);
     setExtraHop(false);
     setShowLimit(CANDIDATE_LIST_PAGE);
-    setChipLimit(CHIP_DEFAULT);
   }, [explorer?.datasetId]);
-
-  const entityPool = useMemo(
-    () => (explorer ? searchEntities(explorer, entityQuery, explorer.topEntities.length) : []),
-    [explorer, entityQuery],
-  );
-  const relationPool = useMemo(
-    () => (explorer ? searchRelations(explorer, relationQuery, explorer.topRelations.length) : []),
-    [explorer, relationQuery],
-  );
-  const entityOptions = entityPool.slice(0, chipLimit);
-  const relationOptions = relationPool.slice(0, chipLimit);
 
   const filteredTriples = useMemo(() => {
     if (!explorer) return [];
-    return filterCandidatesForExplore(
-      explorer,
-      exploreBy,
-      selectedEntityId,
-      selectedRelationId,
-      exploreBy === "candidate" ? candidateQuery : "",
-    );
-  }, [explorer, exploreBy, selectedEntityId, selectedRelationId, candidateQuery]);
+    return filterCandidatesForExplore(explorer, exploreBy, selectedEntityId, selectedRelationId);
+  }, [explorer, exploreBy, selectedEntityId, selectedRelationId]);
 
   const listCandidates: PresentationCandidate[] = useMemo(
     () => filteredTriples.map(explorerTripleToPresentation),
@@ -96,7 +203,7 @@ export function CandidateGenerationScreen({
 
   useEffect(() => {
     setShowLimit(CANDIDATE_LIST_PAGE);
-  }, [exploreBy, selectedEntityId, selectedRelationId, candidateQuery]);
+  }, [exploreBy, selectedEntityId, selectedRelationId]);
 
   // Keep parent selectedCandidateId across workflow steps; only pick a default when missing.
   useEffect(() => {
@@ -135,9 +242,6 @@ export function CandidateGenerationScreen({
         guided: gi.mode === "guided",
       });
     }
-    if (exploreBy === "candidate" && selectedCandidateId) {
-      return buildCandidateFocusGraph(explorer, selectedCandidateId);
-    }
     return null;
   }, [generated, explorer, exploreBy, selectedEntityId, selectedRelationId, selectedCandidateId, gi.mode, extraHop]);
 
@@ -160,11 +264,43 @@ export function CandidateGenerationScreen({
   const shownCandidates = listCandidates.slice(0, showLimit);
   const showingEnd = Math.min(showLimit, listCandidates.length);
   const listTitle =
-    exploreBy === "entity"
-      ? "Candidates for selected entity"
-      : exploreBy === "relation"
-        ? "Generated candidates for relation"
-        : "Generated candidates";
+    exploreBy === "entity" ? "Candidates for selected entity" : "Generated candidates for relation";
+
+  const handleSelectEntity = (entityId: string) => {
+    setSelectedEntityId(entityId);
+    gi.setMode("guided");
+  };
+
+  const handleSelectRelation = (relationId: string) => {
+    setSelectedRelationId(relationId);
+    gi.setMode("guided");
+  };
+
+  const handleGenerate = () => {
+    if (!explorer) return;
+    setGenerated(true);
+    setExploreBy("entity");
+    const defaultEntity = pickDefaultExploreEntity(explorer);
+    if (defaultEntity) {
+      setSelectedEntityId(defaultEntity.id);
+      setSelectedRelationId(null);
+      gi.setMode("guided");
+    }
+  };
+
+  const selectedEntityLabel =
+    selectedEntityId && explorer
+      ? formatEntityLabel(selectedEntityId, explorer.labels.get(selectedEntityId))
+      : null;
+  const selectedEntityCandidateCount =
+    selectedEntityId && explorer
+      ? (explorer.entityIndex.get(selectedEntityId)?.candidateCount ?? 0)
+      : 0;
+  const selectedRelationLabel = selectedRelationId ? formatRelationLabel(selectedRelationId) : null;
+  const selectedRelationCandidateCount =
+    selectedRelationId && explorer
+      ? (explorer.relationIndex.get(selectedRelationId)?.candidateCount ?? 0)
+      : 0;
 
   return (
     <div className="space-y-3">
@@ -181,7 +317,7 @@ export function CandidateGenerationScreen({
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3">
         <button
           type="button"
-          onClick={() => setGenerated(true)}
+          onClick={handleGenerate}
           disabled={!explorer || generated}
           className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 disabled:opacity-50"
         >
@@ -201,11 +337,22 @@ export function CandidateGenerationScreen({
           <div className="rounded-xl border border-slate-200 bg-white p-3">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Explore by</p>
             <div className="mt-2 flex flex-wrap gap-2">
-              {(["entity", "relation", "candidate"] as CandidateExploreBy[]).map((mode) => (
+              {(["entity", "relation"] as CandidateExploreBy[]).map((mode) => (
                 <button
                   key={mode}
                   type="button"
-                  onClick={() => setExploreBy(mode)}
+                  onClick={() => {
+                    setExploreBy(mode);
+                    if (!explorer) return;
+                    if (mode === "entity" && !selectedEntityId) {
+                      const defaultEntity = pickDefaultExploreEntity(explorer);
+                      if (defaultEntity) setSelectedEntityId(defaultEntity.id);
+                    }
+                    if (mode === "relation" && !selectedRelationId) {
+                      const defaultRelation = pickDefaultExploreRelation(explorer);
+                      if (defaultRelation) setSelectedRelationId(defaultRelation.id);
+                    }
+                  }}
                   className={`rounded-lg px-3 py-1.5 text-xs font-medium capitalize transition ${
                     exploreBy === mode
                       ? "bg-slate-900 text-white"
@@ -217,94 +364,53 @@ export function CandidateGenerationScreen({
               ))}
             </div>
 
-            {exploreBy === "entity" ? (
+            {exploreBy === "entity" && explorer ? (
               <div className="mt-3 space-y-2">
-                <input
+                <ExploreSearchAutocomplete
                   value={entityQuery}
-                  onChange={(event) => setEntityQuery(event.target.value)}
+                  onChange={setEntityQuery}
+                  onSelect={handleSelectEntity}
                   placeholder="Search entity ID or name"
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                  explorer={explorer}
+                  mode="entity"
                 />
-                <div className="flex flex-wrap gap-1.5">
-                  {entityOptions.map((entity) => (
-                    <button
-                      key={entity.id}
-                      type="button"
-                      onClick={() => {
-                        setSelectedEntityId(entity.id);
-                        gi.setMode("guided");
-                      }}
-                      className={`rounded-lg border px-2.5 py-1 text-xs font-medium transition ${
-                        selectedEntityId === entity.id
-                          ? "border-blue-500 bg-blue-50 text-blue-800"
-                          : "border-slate-200 text-slate-700 hover:bg-slate-50"
-                      }`}
-                    >
-                      {entity.label}
-                      <span className="ml-1 text-slate-400">({entity.candidateCount})</span>
-                    </button>
-                  ))}
-                </div>
-                {chipLimit < entityPool.length ? (
-                  <button
-                    type="button"
-                    onClick={() => setChipLimit((n) => n + CHIP_DEFAULT)}
-                    className="text-xs font-medium text-slate-600 hover:text-slate-900"
-                  >
-                    Show more entities
-                  </button>
-                ) : null}
+                {selectedEntityLabel ? (
+                  <p className="text-xs text-slate-600">
+                    Showing candidates for{" "}
+                    <span className="font-medium text-slate-800">{selectedEntityLabel}</span>
+                    {selectedEntityCandidateCount > 0 ? (
+                      <span className="text-slate-500"> ({selectedEntityCandidateCount} candidates)</span>
+                    ) : null}
+                    . Search to explore other entities.
+                  </p>
+                ) : (
+                  <p className="text-xs text-slate-500">Search for an entity by ID or name to explore candidates.</p>
+                )}
               </div>
             ) : null}
 
-            {exploreBy === "relation" ? (
+            {exploreBy === "relation" && explorer ? (
               <div className="mt-3 space-y-2">
-                <input
+                <ExploreSearchAutocomplete
                   value={relationQuery}
-                  onChange={(event) => setRelationQuery(event.target.value)}
+                  onChange={setRelationQuery}
+                  onSelect={handleSelectRelation}
                   placeholder="Search relation"
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                  explorer={explorer}
+                  mode="relation"
                 />
-                <div className="flex flex-wrap gap-1.5">
-                  {relationOptions.map((relation) => (
-                    <button
-                      key={relation.id}
-                      type="button"
-                      onClick={() => {
-                        setSelectedRelationId(relation.id);
-                        gi.setMode("guided");
-                      }}
-                      className={`rounded-lg border px-2.5 py-1 text-xs font-medium transition ${
-                        selectedRelationId === relation.id
-                          ? "border-blue-500 bg-blue-50 text-blue-800"
-                          : "border-slate-200 text-slate-700 hover:bg-slate-50"
-                      }`}
-                    >
-                      {relation.label}
-                      <span className="ml-1 text-slate-400">({relation.candidateCount})</span>
-                    </button>
-                  ))}
-                </div>
-                {chipLimit < relationPool.length ? (
-                  <button
-                    type="button"
-                    onClick={() => setChipLimit((n) => n + CHIP_DEFAULT)}
-                    className="text-xs font-medium text-slate-600 hover:text-slate-900"
-                  >
-                    Show more relations
-                  </button>
-                ) : null}
-              </div>
-            ) : null}
-
-            {exploreBy === "candidate" ? (
-              <div className="mt-3">
-                <input
-                  value={candidateQuery}
-                  onChange={(event) => setCandidateQuery(event.target.value)}
-                  placeholder="Search candidate by head, relation, or tail"
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
-                />
+                {selectedRelationLabel ? (
+                  <p className="text-xs text-slate-600">
+                    Showing candidates for relation{" "}
+                    <span className="font-medium text-slate-800">{selectedRelationLabel}</span>
+                    {selectedRelationCandidateCount > 0 ? (
+                      <span className="text-slate-500"> ({selectedRelationCandidateCount} candidates)</span>
+                    ) : null}
+                    . Search to explore other relations.
+                  </p>
+                ) : (
+                  <p className="text-xs text-slate-500">Search for a relation to explore candidates.</p>
+                )}
               </div>
             ) : null}
           </div>
@@ -336,15 +442,15 @@ export function CandidateGenerationScreen({
                       {extraHop ? "Less context" : "Load more context"}
                     </button>
                   ) : null}
-                  <button
-                    type="button"
-                    onClick={() => gi.setMode(gi.mode === "explore" ? "guided" : "explore")}
-                    className="rounded-lg border border-slate-300 px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-slate-100"
-                  >
-                    {gi.mode === "explore" ? "Back to Guided View" : "Explore context"}
-                  </button>
                 </div>
               </div>
+              <GraphToolbar
+                scenario={scenario}
+                mode={gi.mode}
+                onModeChange={gi.setMode}
+                onFit={gi.onFit}
+                onFocusNode={gi.onFocusNode}
+              />
               <InteractiveGraph
                 graph={graph}
                 title={graph?.caption}
@@ -355,7 +461,7 @@ export function CandidateGenerationScreen({
                 onNodeClick={gi.onNodeClick}
                 onEdgeClick={gi.onEdgeClick}
                 onPaneClick={gi.onPaneClick}
-                emptyMessage="Select an entity, relation, or candidate to explore the graph."
+                emptyMessage="Search and select an entity or relation to explore the graph."
               />
               {gi.inspect ? (
                 <GraphInspector
@@ -375,7 +481,11 @@ export function CandidateGenerationScreen({
               <p className="mt-0.5 text-xs text-slate-500">Select a candidate to highlight it in the graph.</p>
               {listCandidates.length === 0 ? (
                 <p className="mt-3 rounded-lg bg-slate-50 px-3 py-4 text-center text-sm text-slate-500">
-                  No generated candidates match this selection.
+                  {exploreBy === "entity" && !selectedEntityId
+                    ? "Search and select an entity to view generated candidates."
+                    : exploreBy === "relation" && !selectedRelationId
+                      ? "Search and select a relation to view generated candidates."
+                      : "No generated candidates match this selection."}
                 </p>
               ) : (
                 <>

@@ -8,7 +8,7 @@ import {
   type PresentationDatasetId,
 } from "./omniaPresentationData";
 
-export type CandidateExploreBy = "entity" | "relation" | "candidate";
+export type CandidateExploreBy = "entity" | "relation";
 
 export interface ExplorerTriple {
   id: string;
@@ -357,28 +357,32 @@ export function filterCandidatesForExplore(
   exploreBy: CandidateExploreBy,
   entityId: string | null,
   relationId: string | null,
-  query: string,
 ): ExplorerTriple[] {
-  const q = query.trim().toLowerCase();
-  let pool: ExplorerTriple[] = [];
-
   if (exploreBy === "entity" && entityId) {
-    pool = explorer.entityIndex.get(entityId)?.candidateTriples ?? [];
-  } else if (exploreBy === "relation" && relationId) {
-    pool = explorer.relationIndex.get(relationId)?.candidateTriples ?? [];
-  } else if (exploreBy === "candidate") {
-    pool = explorer.sliceCandidates.length ? explorer.sliceCandidates : [...explorer.candidateIndex.values()].slice(0, 40);
+    return (explorer.entityIndex.get(entityId)?.candidateTriples ?? []).slice(0, 50);
   }
+  if (exploreBy === "relation" && relationId) {
+    return (explorer.relationIndex.get(relationId)?.candidateTriples ?? []).slice(0, 50);
+  }
+  return [];
+}
 
-  if (!q) return pool.slice(0, 50);
-  return pool
-    .filter((c) => {
-      const head = formatEntityLabel(c.head, explorer.labels.get(c.head)).toLowerCase();
-      const tail = formatEntityLabel(c.tail, explorer.labels.get(c.tail)).toLowerCase();
-      const rel = formatRelationLabel(c.relation).toLowerCase();
-      return head.includes(q) || tail.includes(q) || rel.includes(q) || c.head.toLowerCase().includes(q);
-    })
-    .slice(0, 50);
+export function pickDefaultExploreEntity(explorer: OmniaCandidateExplorer): EntityIndexEntry | null {
+  const fromTop = explorer.topEntities.find((e) => e.candidateCount > 0);
+  if (fromTop) return fromTop;
+  for (const entry of explorer.entityIndex.values()) {
+    if (entry.candidateCount > 0) return entry;
+  }
+  return null;
+}
+
+export function pickDefaultExploreRelation(explorer: OmniaCandidateExplorer): RelationIndexEntry | null {
+  const fromTop = explorer.topRelations.find((r) => r.candidateCount > 0);
+  if (fromTop) return fromTop;
+  for (const entry of explorer.relationIndex.values()) {
+    if (entry.candidateCount > 0) return entry;
+  }
+  return null;
 }
 
 export function searchEntities(explorer: OmniaCandidateExplorer, query: string, limit = 12): EntityIndexEntry[] {

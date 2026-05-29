@@ -1,5 +1,3 @@
-import { CollapsibleDetails } from "./CollapsibleDetails";
-
 export function OmniaCoverPage({ onStart }: { onStart: () => void }) {
   return (
     <div className="omnia-presentation min-h-screen bg-gradient-to-b from-white to-slate-100 text-slate-900">
@@ -18,17 +16,13 @@ export function OmniaCoverPage({ onStart }: { onStart: () => void }) {
           Start Knowledge Completion
         </button>
 
-        <div className="mt-10 w-full max-w-xl">
-          <CollapsibleDetails label="About the system architecture">
-            <figure className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-              <img
-                src={`${import.meta.env.BASE_URL}omnia-demo-cover.svg`}
-                alt="OMNIA-Demo architecture for knowledge graph completion and validation"
-                className="h-auto w-full"
-              />
-            </figure>
-          </CollapsibleDetails>
-        </div>
+        <figure className="mt-10 w-full max-w-xl overflow-hidden rounded-xl border border-slate-200 bg-white">
+          <img
+            src={`${import.meta.env.BASE_URL}omnia-demo-cover.svg`}
+            alt="OMNIA-Demo architecture for knowledge graph completion and validation"
+            className="h-auto w-full"
+          />
+        </figure>
       </div>
     </div>
   );

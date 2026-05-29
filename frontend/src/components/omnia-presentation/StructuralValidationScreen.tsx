@@ -1,4 +1,5 @@
 import { InteractiveGraph } from "./InteractiveGraph";
+import { GraphToolbar } from "./GraphNavPanel";
 import { GraphInspector } from "./GraphInspector";
 import { SummaryMetricCards, type MetricItem } from "./SummaryMetricCards";
 import { CollapsibleDetails } from "./CollapsibleDetails";
@@ -49,10 +50,6 @@ export function StructuralValidationScreen({
   const passedCount = metrics.filteringAccepted;
   const queue = metrics.filterQueueCount ?? metrics.generatedCandidates;
   const filteringRate = queue && passedCount != null ? Math.round((passedCount / queue) * 100) : null;
-  const ranked = [...scenario.candidates]
-    .filter((candidate) => candidate.distance != null)
-    .sort((a, b) => (a.distance ?? 0) - (b.distance ?? 0));
-  const rank = selectedCandidate ? ranked.findIndex((candidate) => candidate.id === selectedCandidate.id) + 1 : 0;
   const passed = candidatePassed(selectedCandidate);
   const edgeKind = passed === false ? "rejected" : passed === true ? "accepted" : "candidate";
   const graph =
@@ -73,7 +70,6 @@ export function StructuralValidationScreen({
           },
         ]
       : []),
-    ...(rank > 0 ? [{ label: "Ranking position", value: `#${rank} of ${ranked.length}` } as MetricItem] : []),
   ];
 
   const details = [
@@ -84,7 +80,6 @@ export function StructuralValidationScreen({
       : metrics.threshold != null
         ? ["Threshold", metrics.threshold.toFixed(4)]
         : null,
-    rank > 0 ? ["Rank", `#${rank} of ${ranked.length}`] : null,
     passed != null ? ["Status", passed ? "Passed" : "Removed"] : null,
   ].filter((item): item is [string, string] => Boolean(item));
 
@@ -103,14 +98,14 @@ export function StructuralValidationScreen({
               <p className="text-xs font-medium text-slate-500">
                 {gi.mode === "explore" ? "Local neighbourhood. Click nodes and edges." : "Candidate in local graph context."}
               </p>
-              <button
-                type="button"
-                onClick={() => gi.setMode(gi.mode === "explore" ? "guided" : "explore")}
-                className="rounded-lg border border-slate-300 px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-slate-100"
-              >
-                {gi.mode === "explore" ? "Back to Guided View" : "Explore candidate context"}
-              </button>
             </div>
+            <GraphToolbar
+              scenario={scenario}
+              mode={gi.mode}
+              onModeChange={gi.setMode}
+              onFit={gi.onFit}
+              onFocusNode={gi.onFocusNode}
+            />
             <InteractiveGraph
               graph={graph}
               height={300}

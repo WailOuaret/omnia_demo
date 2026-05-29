@@ -1,4 +1,5 @@
 import { InteractiveGraph } from "./InteractiveGraph";
+import { GraphToolbar } from "./GraphNavPanel";
 import { GraphInspector } from "./GraphInspector";
 import { SummaryMetricCards } from "./SummaryMetricCards";
 import { CollapsibleDetails } from "./CollapsibleDetails";
@@ -79,6 +80,13 @@ export function GraphRefinementScreen({
         <>
           <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
             <div className="space-y-3">
+              <GraphToolbar
+                scenario={scenario}
+                mode={gi.mode}
+                onModeChange={gi.setMode}
+                onFit={gi.onFit}
+                onFocusNode={gi.onFocusNode}
+              />
               <InteractiveGraph
                 graph={graph}
                 title="Updated graph context"

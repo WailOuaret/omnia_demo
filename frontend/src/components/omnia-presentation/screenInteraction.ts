@@ -7,6 +7,8 @@ export interface GraphInteraction {
   setMode: (mode: GraphMode) => void;
   inspect: InspectTarget;
   fitKey: number;
+  onFit: () => void;
+  onFocusNode: (id: string) => void;
   onNodeClick: (id: string) => void;
   onEdgeClick: (id: string) => void;
   onPaneClick: () => void;

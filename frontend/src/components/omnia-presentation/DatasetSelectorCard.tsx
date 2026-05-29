@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from "react";
+import { ChevronDown } from "lucide-react";
 import {
   PRESENTATION_DATASET_ORDER,
   factsFor,
@@ -11,6 +13,74 @@ const LABELS: Record<PresentationDatasetId, string> = {
   covidFact: "COVID-Fact static",
 };
 
+function CompactDatasetDropdown({
+  selected,
+  onSelect,
+}: {
+  selected: PresentationDatasetId;
+  onSelect: (id: PresentationDatasetId) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const handlePointerDown = (event: MouseEvent) => {
+      if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handlePointerDown);
+    return () => document.removeEventListener("mousedown", handlePointerDown);
+  }, [open]);
+
+  const handleSelect = (id: PresentationDatasetId) => {
+    onSelect(id);
+    setOpen(false);
+  };
+
+  return (
+    <div ref={rootRef} className="relative">
+      <button
+        type="button"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => setOpen((prev) => !prev)}
+        className="flex w-full items-center justify-between gap-2 rounded-lg border border-blue-500 bg-blue-50 px-3 py-2 text-left text-sm font-semibold text-blue-900 transition hover:border-blue-600"
+      >
+        <span className="min-w-0 truncate">{LABELS[selected]}</span>
+        <ChevronDown className={`h-4 w-4 shrink-0 text-blue-700 transition ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open ? (
+        <ul
+          role="listbox"
+          aria-label="Choose dataset"
+          className="absolute left-0 right-0 top-full z-20 mt-1 overflow-hidden rounded-lg border border-slate-200 bg-white py-1 shadow-lg"
+        >
+          {PRESENTATION_DATASET_ORDER.map((id) => (
+            <li key={id} role="option" aria-selected={selected === id}>
+              <button
+                type="button"
+                onClick={() => handleSelect(id)}
+                className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm transition ${
+                  selected === id
+                    ? "bg-blue-50 font-semibold text-blue-900"
+                    : "text-slate-700 hover:bg-slate-50"
+                }`}
+              >
+                <span>{LABELS[id]}</span>
+                {id === "covidFact" ? (
+                  <span className="text-[10px] uppercase text-slate-400">static</span>
+                ) : null}
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </div>
+  );
+}
+
 export function DatasetSelectorCard({
   selected,
   onSelect,
@@ -21,25 +91,7 @@ export function DatasetSelectorCard({
   variant?: "cards" | "compact";
 }) {
   if (variant === "compact") {
-    return (
-      <div className="space-y-1.5">
-        {PRESENTATION_DATASET_ORDER.map((id) => (
-          <button
-            key={id}
-            type="button"
-            onClick={() => onSelect(id)}
-            className={`flex w-full items-center justify-between rounded-lg border px-3 py-2 text-left text-sm transition ${
-              selected === id
-                ? "border-blue-500 bg-blue-50 font-semibold text-blue-900"
-                : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
-            }`}
-          >
-            <span>{LABELS[id]}</span>
-            {id === "covidFact" ? <span className="text-[10px] uppercase text-slate-400">static</span> : null}
-          </button>
-        ))}
-      </div>
-    );
+    return <CompactDatasetDropdown selected={selected} onSelect={onSelect} />;
   }
 
   return (

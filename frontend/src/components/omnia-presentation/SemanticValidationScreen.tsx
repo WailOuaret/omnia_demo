@@ -1,4 +1,5 @@
 import { InteractiveGraph } from "./InteractiveGraph";
+import { GraphToolbar } from "./GraphNavPanel";
 import { GraphInspector } from "./GraphInspector";
 import { SummaryMetricCards, type MetricItem } from "./SummaryMetricCards";
 import { CollapsibleDetails } from "./CollapsibleDetails";
@@ -61,33 +62,17 @@ export function SemanticValidationScreen({
 
   const validatedTotal =
     (metrics.llmAccepted ?? 0) + (metrics.llmRejected ?? 0) + (metrics.llmUnresolved ?? 0);
-  const validationRate =
-    isRealLlm && metrics.filteringAccepted && validatedTotal > 0
-      ? Math.round((validatedTotal / metrics.filteringAccepted) * 100)
-      : null;
 
   const metricCards: MetricItem[] = isRealLlm
     ? [
         { label: "Structurally validated", value: fmt(metrics.filteringAccepted) },
         { label: "LLM validated", value: fmt(validatedTotal), tone: "green" },
-        ...(validationRate != null ? [{ label: "Validation rate", value: `${validationRate}%` } as MetricItem] : []),
-        ...(selectedCandidate?.llmScore != null
-          ? [{ label: "Confidence score", value: selectedCandidate.llmScore.toFixed(2), tone: "blue" as const }]
-          : []),
-        ...(verdict ? [{ label: "Validation result", value: verdict.label } as MetricItem] : []),
       ]
-    : isPreparedExample && verdict
-      ? [
-          { label: "Validation result", value: verdict.label },
-          ...(selectedCandidate?.llmScore != null
-            ? [{ label: "Confidence score", value: selectedCandidate.llmScore.toFixed(2), tone: "blue" as const }]
-            : []),
-        ]
-      : [];
+    : [];
 
   return (
     <div className="space-y-4">
-      {metricCards.length ? <SummaryMetricCards items={metricCards} /> : null}
+      {metricCards.length > 0 ? <SummaryMetricCards items={metricCards} /> : null}
 
       {!hasLlmOutput ? (
         <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600">
@@ -107,14 +92,14 @@ export function SemanticValidationScreen({
               <p className="text-xs font-medium text-slate-500">
                 {gi.mode === "explore" ? "Local neighbourhood. Click nodes and edges." : "Candidate relation in local context."}
               </p>
-              <button
-                type="button"
-                onClick={() => gi.setMode(gi.mode === "explore" ? "guided" : "explore")}
-                className="rounded-lg border border-slate-300 px-2.5 py-1 text-xs font-medium text-slate-600 hover:bg-slate-100"
-              >
-                {gi.mode === "explore" ? "Back to Guided View" : "Open graph context"}
-              </button>
             </div>
+            <GraphToolbar
+              scenario={scenario}
+              mode={gi.mode}
+              onModeChange={gi.setMode}
+              onFit={gi.onFit}
+              onFocusNode={gi.onFocusNode}
+            />
             <InteractiveGraph
               graph={graph}
               height={300}
@@ -155,9 +140,6 @@ export function SemanticValidationScreen({
                 ) : null}
                 <div className={`rounded-xl border px-3 py-2.5 text-sm font-medium ${verdict.cls}`}>
                   {verdict.label}
-                  {selectedCandidate.llmScore != null ? (
-                    <span className="ml-2 font-normal opacity-80">confidence {selectedCandidate.llmScore.toFixed(2)}</span>
-                  ) : null}
                 </div>
                 {selectedCandidate.llmRationale ? (
                   <p className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-600">
@@ -190,9 +172,6 @@ export function SemanticValidationScreen({
               </div>
             ) : null}
             {selectedCandidate?.llmRationale ? <Detail k="LLM explanation" v={selectedCandidate.llmRationale} /> : null}
-            {selectedCandidate?.llmScore != null ? (
-              <Detail k="Confidence" v={selectedCandidate.llmScore.toFixed(2)} />
-            ) : null}
             {verdict ? <Detail k="Verdict" v={verdict.label} /> : null}
           </div>
         ) : (
