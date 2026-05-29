@@ -1,6 +1,6 @@
 // Entity / relation centric graphs for Candidate Generation (red dashed = proposed).
 
-import { formatEntityLabel, formatRelationLabel } from "./formatKgLabel";
+import { formatEntityDisplayParts, formatEntityLabel, formatRelationLabel } from "./formatKgLabel";
 import type { PGraphEdge, PGraphNode, PresentationGraph } from "./buildCandidateGraph";
 import type { ExplorerTriple, KnownEdge, OmniaCandidateExplorer } from "./omniaCandidateExplorer";
 
@@ -19,10 +19,16 @@ function radialPlace(
   const cx = W / 2;
   const cy = H / 2;
   const others = [...nodeIds].filter((id) => id !== centerId);
+  const labelFor = (id: string) => {
+    const parts = formatEntityDisplayParts(id, labels.get(id));
+    return { label: parts.primary, subLabel: parts.secondary };
+  };
+  const centerParts = labelFor(centerId);
   const nodes: PGraphNode[] = [
     {
       id: centerId,
-      label: formatEntityLabel(centerId, labels.get(centerId)),
+      label: centerParts.label,
+      subLabel: centerParts.subLabel,
       x: cx,
       y: cy,
       kind: "head",
@@ -32,9 +38,11 @@ function radialPlace(
   const ringR = others.length > 12 ? 200 : 160;
   others.forEach((id, i) => {
     const angle = (2 * Math.PI * i) / Math.max(others.length, 1) - Math.PI / 2;
+    const parts = labelFor(id);
     nodes.push({
       id,
-      label: formatEntityLabel(id, labels.get(id)),
+      label: parts.label,
+      subLabel: parts.subLabel,
       x: cx + ringR * Math.cos(angle),
       y: cy + ringR * Math.sin(angle),
       kind: highlightIds.has(id) ? "candidateTail" : "context",
@@ -134,7 +142,7 @@ export function buildEntityExplorationGraph(
       id: edge.id,
       source: edge.source,
       target: edge.target,
-      label: formatRelationLabel(edge.relation),
+      label: "",
       kind: "known",
     });
   }
@@ -148,7 +156,7 @@ export function buildEntityExplorationGraph(
       id: `proposed-${c.id}`,
       source: c.head,
       target: c.tail,
-      label: formatRelationLabel(c.relation),
+      label: isSelected ? formatRelationLabel(c.relation) : "",
       kind: "proposed",
       highlight: isSelected,
     });
@@ -212,19 +220,20 @@ export function buildRelationExplorationGraph(
       id: `known-${t.id}`,
       source: t.head,
       target: t.tail,
-      label: formatRelationLabel(t.relation),
+      label: "",
       kind: "known",
     });
   }
 
   for (const c of candidates) {
+    const isSelected = selectedCandidateId === c.id;
     edges.push({
       id: `proposed-${c.id}`,
       source: c.head,
       target: c.tail,
-      label: formatRelationLabel(c.relation),
+      label: isSelected ? formatRelationLabel(c.relation) : "",
       kind: "proposed",
-      highlight: selectedCandidateId === c.id,
+      highlight: isSelected,
     });
   }
 

@@ -42,6 +42,7 @@ const NODE_STYLE: Record<PGraphNode["kind"], { bg: string; border: string; text:
 
 type KgNodeData = {
   label: string;
+  subLabel?: string;
   kind: PGraphNode["kind"];
   highlight?: boolean;
   selected?: boolean;
@@ -58,16 +59,21 @@ function KgNode({ data }: NodeProps) {
         border: `${d.highlight || d.selected ? 2.4 : 1.4}px solid ${d.highlight || d.selected ? "#2563eb" : style.border}`,
         color: style.text,
         borderRadius: 8,
-        padding: "5px 10px",
+        padding: "6px 10px",
         fontSize: 12,
         fontWeight: 600,
-        whiteSpace: "nowrap",
+        textAlign: "center",
+        lineHeight: 1.25,
         boxShadow: ring,
         cursor: "pointer",
+        maxWidth: 140,
       }}
     >
       <Handle type="target" position={Position.Left} style={{ opacity: 0 }} />
-      {d.label}
+      <div>{d.label}</div>
+      {d.subLabel ? (
+        <div style={{ fontSize: 9, fontWeight: 500, opacity: 0.65, marginTop: 2 }}>{d.subLabel}</div>
+      ) : null}
       <Handle type="source" position={Position.Right} style={{ opacity: 0 }} />
     </div>
   );
@@ -167,7 +173,13 @@ function toFlowNodes(graph: PresentationGraph, selectedNodeId: string | null): N
     id: n.id,
     type: "kg",
     position: { x: n.x, y: n.y },
-    data: { label: n.label, kind: n.kind, highlight: n.highlight, selected: n.id === selectedNodeId },
+    data: {
+      label: n.label,
+      subLabel: n.subLabel,
+      kind: n.kind,
+      highlight: n.highlight,
+      selected: n.id === selectedNodeId,
+    },
     draggable: true,
   }));
 }

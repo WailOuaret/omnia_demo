@@ -71,10 +71,6 @@ export function GraphNavPanel({
       >
         Fit / reset view
       </button>
-
-      {scenario?.static ? (
-        <p className="px-0.5 text-[10px] leading-4 text-slate-400">Static prepared sample</p>
-      ) : null}
     </div>
   );
 }

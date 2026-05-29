@@ -1,30 +1,37 @@
 {
   "nodeLimit": 100,
   "edgeLimit": 200,
+  "samplingLimit": 600,
+  "sampleProportion": 0.8,
+  "sources": {
+    "codexM": "https://github.com/tsafavi/codex (codex-m)",
+    "fb15k237": "https://github.com/villmow/datasets_knowledge_embedding (FB15k-237)",
+    "wn18rr": "https://github.com/villmow/datasets_knowledge_embedding (WN18RR/original)"
+  },
   "datasets": {
     "codexM": {
       "file": "outputs\\omnia-100node-results\\codexM_100node.json",
-      "sessionId": "244c55beea1b",
-      "runtimeSec": 66.87,
+      "sessionId": "c21d40785bfd",
+      "runtimeSec": 28.56,
       "overview": {
-        "nodes": 60,
-        "edges": 59
+        "nodes": 26,
+        "edges": 25
       },
       "guided": {
-        "nodes": 28,
-        "edges": 31,
+        "nodes": 27,
+        "edges": 27,
         "clusters": 20,
-        "candidates": 4
+        "candidates": 1
       },
       "pipelineSummary": {
-        "known_triples": 1200,
-        "reference_triples": 1500,
-        "completed_triples": 1200,
-        "accepted_additions": 0,
-        "rejected_candidates": 24,
+        "known_triples": 480,
+        "reference_triples": 600,
+        "completed_triples": 500,
+        "accepted_additions": 20,
+        "rejected_candidates": 1,
         "unresolved_candidates": 0,
         "recovered_true_missing": 0,
-        "novel_not_in_reference": 0,
+        "novel_not_in_reference": 20,
         "total": 0,
         "accepted": 0,
         "rejected": 0,
@@ -42,24 +49,24 @@
     },
     "fb15k237": {
       "file": "outputs\\omnia-100node-results\\fb15k237_100node.json",
-      "sessionId": "e29afdbb361b",
-      "runtimeSec": 64.65,
+      "sessionId": "94652ed0156c",
+      "runtimeSec": 4.21,
       "overview": {
-        "nodes": 45,
-        "edges": 44
+        "nodes": 18,
+        "edges": 17
       },
       "guided": {
-        "nodes": 17,
-        "edges": 19,
+        "nodes": 4,
+        "edges": 4,
         "clusters": 20,
-        "candidates": 3
+        "candidates": 1
       },
       "pipelineSummary": {
-        "known_triples": 1200,
-        "reference_triples": 1500,
-        "completed_triples": 1200,
+        "known_triples": 480,
+        "reference_triples": 600,
+        "completed_triples": 480,
         "accepted_additions": 0,
-        "rejected_candidates": 24,
+        "rejected_candidates": 1,
         "unresolved_candidates": 0,
         "recovered_true_missing": 0,
         "novel_not_in_reference": 0,
@@ -80,24 +87,24 @@
     },
     "wn18rr": {
       "file": "outputs\\omnia-100node-results\\wn18rr_100node.json",
-      "sessionId": "b11c8835d2df",
-      "runtimeSec": 15.75,
+      "sessionId": "a8608afb6fca",
+      "runtimeSec": 0.52,
       "overview": {
-        "nodes": 10,
-        "edges": 9
+        "nodes": 4,
+        "edges": 3
       },
       "guided": {
-        "nodes": 6,
-        "edges": 5,
-        "clusters": 20,
+        "nodes": 4,
+        "edges": 3,
+        "clusters": 13,
         "candidates": 0
       },
       "pipelineSummary": {
-        "known_triples": 1200,
-        "reference_triples": 1500,
-        "completed_triples": 1200,
+        "known_triples": 480,
+        "reference_triples": 600,
+        "completed_triples": 480,
         "accepted_additions": 0,
-        "rejected_candidates": 1,
+        "rejected_candidates": 0,
         "unresolved_candidates": 0,
         "recovered_true_missing": 0,
         "novel_not_in_reference": 0,
@@ -118,7 +125,7 @@
     }
   },
   "covidFact": {
-    "file": "outputs/omnia-100node-results/covidFact_static_demo.json",
+    "file": "frontend/public/demo-scenarios/covidFact_static_demo.json",
     "note": "Static guided scenario only (no live KG backend converter)."
   }
 }

@@ -1,7 +1,7 @@
 // Small local-context graph for the structural / semantic validation screens.
 // 3–10 nodes: the candidate's head → tail plus one shared-pattern anchor.
 
-import { formatEntityLabel, formatRelationLabel } from "./formatKgLabel";
+import { formatEntityDisplayParts, formatRelationLabel } from "./formatKgLabel";
 import type { PresentationCandidate } from "./omniaPresentationData";
 import type { PGraphEdge, PGraphEdgeKind, PGraphNode, PresentationGraph } from "./buildCandidateGraph";
 
@@ -19,9 +19,19 @@ export function buildValidationGraph(
   const midY = 120;
   const anchorY = HEIGHT - 70;
 
+  const headParts = formatEntityDisplayParts(candidate.head);
+  const tailParts = formatEntityDisplayParts(candidate.tail);
   const nodes: PGraphNode[] = [
-    { id: candidate.head, label: formatEntityLabel(candidate.head), x: headX, y: midY, kind: "head", highlight: true },
-    { id: `tail-${candidate.id}`, label: formatEntityLabel(candidate.tail), x: tailX, y: midY, kind: "candidateTail", highlight: true },
+    { id: candidate.head, label: headParts.primary, subLabel: headParts.secondary, x: headX, y: midY, kind: "head", highlight: true },
+    {
+      id: `tail-${candidate.id}`,
+      label: tailParts.primary,
+      subLabel: tailParts.secondary,
+      x: tailX,
+      y: midY,
+      kind: "candidateTail",
+      highlight: true,
+    },
   ];
   const edges: PGraphEdge[] = [
     {
@@ -37,9 +47,11 @@ export function buildValidationGraph(
   // Shared-pattern context: head already connects to the cluster's shared tail.
   if (candidate.sharedTail && candidate.sharedRelation) {
     const anchorId = `anchor-${candidate.sharedTail}`;
+    const anchorParts = formatEntityDisplayParts(candidate.sharedTail);
     nodes.push({
       id: anchorId,
-      label: formatEntityLabel(candidate.sharedTail),
+      label: anchorParts.primary,
+      subLabel: anchorParts.secondary,
       x: WIDTH / 2,
       y: anchorY,
       kind: "tail",
@@ -48,7 +60,7 @@ export function buildValidationGraph(
       id: `ctx-${candidate.id}`,
       source: candidate.head,
       target: anchorId,
-      label: formatRelationLabel(candidate.sharedRelation),
+      label: "",
       kind: "known",
     });
   }

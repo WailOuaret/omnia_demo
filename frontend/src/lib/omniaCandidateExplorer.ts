@@ -381,26 +381,26 @@ export function filterCandidatesForExplore(
     .slice(0, 50);
 }
 
-export function searchEntities(explorer: OmniaCandidateExplorer, query: string): EntityIndexEntry[] {
+export function searchEntities(explorer: OmniaCandidateExplorer, query: string, limit = 12): EntityIndexEntry[] {
   const q = query.trim().toLowerCase();
   const pool = explorer.topEntities;
-  if (!q) return pool;
+  if (!q) return pool.slice(0, limit);
   return pool
     .filter((e) => {
       const label = e.label.toLowerCase();
       return label.includes(q) || e.id.toLowerCase().includes(q);
     })
-    .slice(0, 20);
+    .slice(0, limit);
 }
 
-export function searchRelations(explorer: OmniaCandidateExplorer, query: string): RelationIndexEntry[] {
+export function searchRelations(explorer: OmniaCandidateExplorer, query: string, limit = 12): RelationIndexEntry[] {
   const q = query.trim().toLowerCase();
   const pool = explorer.topRelations;
-  if (!q) return pool;
+  if (!q) return pool.slice(0, limit);
   return pool
     .filter((r) => {
       const label = r.label.toLowerCase();
       return label.includes(q) || r.id.toLowerCase().includes(q);
     })
-    .slice(0, 20);
+    .slice(0, limit);
 }

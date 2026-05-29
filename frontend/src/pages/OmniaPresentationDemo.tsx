@@ -34,7 +34,7 @@ type Screen = "cover" | "getStarted" | WorkflowScreen;
 
 const SCREEN_SUBTITLE: Record<WorkflowScreen, string> = {
   candidateGeneration:
-    "OMNIA proposes candidate relations that may be missing from the selected knowledge graph.",
+    "Select an entity, relation, or candidate to explore generated missing relations.",
   structuralValidation: "OMNIA keeps candidates that fit the graph structure and removes weak ones.",
   semanticValidation: "The LLM checks whether the proposed relation makes sense.",
   graphRefinement: "Accepted relations are added to the graph; rejected relations are left out.",

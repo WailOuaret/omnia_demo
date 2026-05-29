@@ -119,9 +119,10 @@ export function GraphRefinementScreen({
                     key={item.key}
                     type="button"
                     onClick={() => onDecide(item.key)}
+                    disabled={decision !== "none" && decision !== item.key}
                     className={`rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition ${item.cls} ${
                       decision === item.key ? "ring-2 ring-offset-1 ring-slate-400" : ""
-                    }`}
+                    } disabled:cursor-not-allowed disabled:opacity-40`}
                   >
                     {item.label}
                   </button>
@@ -141,7 +142,7 @@ export function GraphRefinementScreen({
                   onClick={onResetFeedback}
                   className="w-full rounded-xl border border-slate-300 px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-100"
                 >
-                  Reset this decision
+                  Reset decision
                 </button>
               ) : null}
             </div>

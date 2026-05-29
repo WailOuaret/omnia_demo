@@ -20,7 +20,8 @@ import {
 import { formatEntityLabel, formatRelationLabel } from "../../lib/formatKgLabel";
 import type { PresentationCandidate, PresentationScenario } from "../../lib/omniaPresentationData";
 
-const LIST_PAGE_SIZE = 8;
+const CHIP_DEFAULT = 10;
+const CANDIDATE_LIST_PAGE = 8;
 
 function fmt(value: number | null | undefined): string {
   return value == null ? "Not included" : value.toLocaleString();
@@ -49,7 +50,8 @@ export function CandidateGenerationScreen({
   const [selectedEntityId, setSelectedEntityId] = useState<string | null>(null);
   const [selectedRelationId, setSelectedRelationId] = useState<string | null>(null);
   const [extraHop, setExtraHop] = useState(false);
-  const [showLimit, setShowLimit] = useState(LIST_PAGE_SIZE);
+  const [showLimit, setShowLimit] = useState(CANDIDATE_LIST_PAGE);
+  const [chipLimit, setChipLimit] = useState(CHIP_DEFAULT);
 
   useEffect(() => {
     if (!explorer) return;
@@ -61,18 +63,20 @@ export function CandidateGenerationScreen({
     setSelectedEntityId(explorer.topEntities[0]?.id ?? null);
     setSelectedRelationId(explorer.topRelations[0]?.id ?? null);
     setExtraHop(false);
-    setShowLimit(LIST_PAGE_SIZE);
+    setShowLimit(CANDIDATE_LIST_PAGE);
+    setChipLimit(CHIP_DEFAULT);
   }, [explorer?.datasetId]);
 
-  const entityOptions = useMemo(
-    () => (explorer ? searchEntities(explorer, entityQuery) : []),
+  const entityPool = useMemo(
+    () => (explorer ? searchEntities(explorer, entityQuery, explorer.topEntities.length) : []),
     [explorer, entityQuery],
   );
-
-  const relationOptions = useMemo(
-    () => (explorer ? searchRelations(explorer, relationQuery) : []),
+  const relationPool = useMemo(
+    () => (explorer ? searchRelations(explorer, relationQuery, explorer.topRelations.length) : []),
     [explorer, relationQuery],
   );
+  const entityOptions = entityPool.slice(0, chipLimit);
+  const relationOptions = relationPool.slice(0, chipLimit);
 
   const filteredTriples = useMemo(() => {
     if (!explorer) return [];
@@ -91,12 +95,21 @@ export function CandidateGenerationScreen({
   );
 
   useEffect(() => {
-    setShowLimit(LIST_PAGE_SIZE);
-    if (listCandidates.length === 0) return;
-    if (!selectedCandidateId || !listCandidates.some((candidate) => candidate.id === selectedCandidateId)) {
+    setShowLimit(CANDIDATE_LIST_PAGE);
+  }, [exploreBy, selectedEntityId, selectedRelationId, candidateQuery]);
+
+  // Keep parent selectedCandidateId across workflow steps; only pick a default when missing.
+  useEffect(() => {
+    if (!explorer || listCandidates.length === 0) return;
+    if (selectedCandidateId == null) {
       onSelectCandidate(listCandidates[0].id);
+      return;
     }
-  }, [listCandidates, selectedCandidateId, onSelectCandidate]);
+    const stillValid =
+      listCandidates.some((c) => c.id === selectedCandidateId) ||
+      explorer.candidateIndex.has(selectedCandidateId);
+    if (!stillValid) onSelectCandidate(listCandidates[0].id);
+  }, [explorer?.datasetId, listCandidates, selectedCandidateId, onSelectCandidate]);
 
   const selectedCandidate = useMemo(() => {
     if (listCandidates.length === 0) return null;
@@ -146,9 +159,15 @@ export function CandidateGenerationScreen({
   const generatedCount = explorer?.metrics.generatedCandidates ?? scenario.metrics.generatedCandidates;
   const shownCandidates = listCandidates.slice(0, showLimit);
   const showingEnd = Math.min(showLimit, listCandidates.length);
+  const listTitle =
+    exploreBy === "entity"
+      ? "Candidates for selected entity"
+      : exploreBy === "relation"
+        ? "Generated candidates for relation"
+        : "Generated candidates";
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <SummaryMetricCards
         items={[
           { label: "Dataset", value: scenario.shortName },
@@ -159,34 +178,28 @@ export function CandidateGenerationScreen({
         ]}
       />
 
-      <div className="rounded-xl border border-slate-200 bg-white p-4">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <p className="text-sm font-semibold text-slate-900">Candidate generation</p>
-            <p className="mt-1 text-xs text-slate-500">
-              Precomputed candidates are ready for this prepared sample.
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={() => setGenerated(true)}
-            disabled={!explorer || generated}
-            className="rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Generate Candidates
-          </button>
-        </div>
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3">
+        <button
+          type="button"
+          onClick={() => setGenerated(true)}
+          disabled={!explorer || generated}
+          className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-800 disabled:opacity-50"
+        >
+          Generate Candidates
+        </button>
         {generated ? (
-          <div className="mt-3 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
+          <p className="text-sm text-emerald-800">
             Candidate generation completed successfully. Total candidates generated: {fmt(generatedCount)}.
-          </div>
-        ) : null}
+          </p>
+        ) : (
+          <p className="text-xs text-slate-500">Run generation on the prepared sample.</p>
+        )}
       </div>
 
       {generated ? (
         <>
           <div className="rounded-xl border border-slate-200 bg-white p-3">
-            <p className="text-sm font-semibold text-slate-900">Explore candidates by</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Explore by</p>
             <div className="mt-2 flex flex-wrap gap-2">
               {(["entity", "relation", "candidate"] as CandidateExploreBy[]).map((mode) => (
                 <button
@@ -212,7 +225,7 @@ export function CandidateGenerationScreen({
                   placeholder="Search entity ID or name"
                   className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
                 />
-                <div className="flex max-h-32 flex-wrap gap-1.5 overflow-y-auto">
+                <div className="flex flex-wrap gap-1.5">
                   {entityOptions.map((entity) => (
                     <button
                       key={entity.id}
@@ -232,6 +245,15 @@ export function CandidateGenerationScreen({
                     </button>
                   ))}
                 </div>
+                {chipLimit < entityPool.length ? (
+                  <button
+                    type="button"
+                    onClick={() => setChipLimit((n) => n + CHIP_DEFAULT)}
+                    className="text-xs font-medium text-slate-600 hover:text-slate-900"
+                  >
+                    Show more entities
+                  </button>
+                ) : null}
               </div>
             ) : null}
 
@@ -243,7 +265,7 @@ export function CandidateGenerationScreen({
                   placeholder="Search relation"
                   className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm"
                 />
-                <div className="flex max-h-32 flex-wrap gap-1.5 overflow-y-auto">
+                <div className="flex flex-wrap gap-1.5">
                   {relationOptions.map((relation) => (
                     <button
                       key={relation.id}
@@ -263,6 +285,15 @@ export function CandidateGenerationScreen({
                     </button>
                   ))}
                 </div>
+                {chipLimit < relationPool.length ? (
+                  <button
+                    type="button"
+                    onClick={() => setChipLimit((n) => n + CHIP_DEFAULT)}
+                    className="text-xs font-medium text-slate-600 hover:text-slate-900"
+                  >
+                    Show more relations
+                  </button>
+                ) : null}
               </div>
             ) : null}
 
@@ -340,7 +371,7 @@ export function CandidateGenerationScreen({
             </div>
 
             <div className="rounded-xl border border-slate-200 bg-white p-3">
-              <p className="text-sm font-semibold text-slate-900">Generated candidate relations</p>
+              <p className="text-sm font-semibold text-slate-900">{listTitle}</p>
               <p className="mt-0.5 text-xs text-slate-500">Select a candidate to highlight it in the graph.</p>
               {listCandidates.length === 0 ? (
                 <p className="mt-3 rounded-lg bg-slate-50 px-3 py-4 text-center text-sm text-slate-500">
@@ -365,7 +396,7 @@ export function CandidateGenerationScreen({
                   {showLimit < listCandidates.length ? (
                     <button
                       type="button"
-                      onClick={() => setShowLimit((value) => value + LIST_PAGE_SIZE)}
+                      onClick={() => setShowLimit((value) => value + CANDIDATE_LIST_PAGE)}
                       className="mt-3 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
                     >
                       Show more candidates

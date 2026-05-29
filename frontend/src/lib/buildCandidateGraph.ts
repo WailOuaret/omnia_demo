@@ -18,6 +18,7 @@ export type PGraphEdgeKind =
 export interface PGraphNode {
   id: string;
   label: string;
+  subLabel?: string;
   x: number;
   y: number;
   kind: PGraphNodeKind;

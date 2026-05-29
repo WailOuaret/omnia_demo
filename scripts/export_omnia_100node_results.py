@@ -3,7 +3,9 @@
 
 from __future__ import annotations
 
+import argparse
 import json
+import shutil
 import sys
 import time
 from pathlib import Path
@@ -11,8 +13,11 @@ from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 OUTPUT_DIR = REPO_ROOT / "outputs" / "omnia-100node-results"
-NODE_LIMIT = 100
-EDGE_LIMIT = 200
+DEMO_SCENARIOS_DIR = REPO_ROOT / "frontend" / "public" / "demo-scenarios"
+DEFAULT_NODE_LIMIT = 100
+DEFAULT_EDGE_LIMIT = 200
+DEFAULT_SAMPLING_LIMIT = 600
+DEFAULT_SAMPLE_PROPORTION = 0.8
 
 BENCHMARKS = [
     {
@@ -63,7 +68,14 @@ def _json_ready(obj: Any) -> Any:
     return obj
 
 
-def _export_dataset(entry: dict[str, str]) -> dict[str, Any] | None:
+def _export_dataset(
+    entry: dict[str, str],
+    *,
+    node_limit: int,
+    edge_limit: int,
+    sampling_limit: int,
+    sample_proportion: float,
+) -> dict[str, Any] | None:
     from backend.app.services import ingestion, pipeline
     from backend.app.services.omnia_demo_slice import build_omnia_demo_slice, build_overview_slice
 
@@ -73,7 +85,10 @@ def _export_dataset(entry: dict[str, str]) -> dict[str, Any] | None:
 
     print(f"\n[{dataset_id}] creating session ({sample_id})...")
     session = ingestion.create_session_from_sample(
-        sample_id, holdout_mode=True, sample_proportion=0.8
+        sample_id,
+        holdout_mode=True,
+        sample_proportion=sample_proportion,
+        sampling_limit=sampling_limit,
     )
 
     print(f"[{dataset_id}] running full pipeline...")
@@ -85,13 +100,13 @@ def _export_dataset(entry: dict[str, str]) -> dict[str, Any] | None:
     )
 
     overview = build_overview_slice(
-        session, dataset_id, limit_nodes=NODE_LIMIT, limit_edges=EDGE_LIMIT
+        session, dataset_id, limit_nodes=node_limit, limit_edges=edge_limit
     )
     guided = build_omnia_demo_slice(
         session,
         dataset_id,
-        limit_nodes=NODE_LIMIT,
-        limit_edges=EDGE_LIMIT,
+        limit_nodes=node_limit,
+        limit_edges=edge_limit,
         mode="guided",
         expand_context=True,
     )
@@ -136,7 +151,8 @@ def _export_dataset(entry: dict[str, str]) -> dict[str, Any] | None:
         "sampleId": sample_id,
         "sessionId": session.session_id,
         "recommendedMode": entry["recommended_mode"],
-        "limits": {"nodes": NODE_LIMIT, "edges": EDGE_LIMIT},
+        "limits": {"nodes": node_limit, "edges": edge_limit},
+        "samplingLimit": sampling_limit,
         "paperStats": paper,
         "session": {
             "dataset_name": session.dataset_name,
@@ -169,20 +185,52 @@ def _export_dataset(entry: dict[str, str]) -> dict[str, Any] | None:
     return result
 
 
+def _copy_to_demo_scenarios(out_path: Path) -> Path:
+    DEMO_SCENARIOS_DIR.mkdir(parents=True, exist_ok=True)
+    dest = DEMO_SCENARIOS_DIR / out_path.name
+    shutil.copy2(out_path, dest)
+    return dest
+
+
 def main() -> int:
+    parser = argparse.ArgumentParser(description="Export OMNIA demo JSON from official benchmark splits.")
+    parser.add_argument("--sampling-limit", type=int, default=DEFAULT_SAMPLING_LIMIT)
+    parser.add_argument("--sample-proportion", type=float, default=DEFAULT_SAMPLE_PROPORTION)
+    parser.add_argument("--node-limit", type=int, default=DEFAULT_NODE_LIMIT)
+    parser.add_argument("--edge-limit", type=int, default=DEFAULT_EDGE_LIMIT)
+    parser.add_argument("--copy-to-frontend", action="store_true", default=True)
+    parser.add_argument("--no-copy-to-frontend", dest="copy_to_frontend", action="store_false")
+    args = parser.parse_args()
+
     sys.path.insert(0, str(REPO_ROOT))
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     index: dict[str, Any] = {
-        "nodeLimit": NODE_LIMIT,
-        "edgeLimit": EDGE_LIMIT,
+        "nodeLimit": args.node_limit,
+        "edgeLimit": args.edge_limit,
+        "samplingLimit": args.sampling_limit,
+        "sampleProportion": args.sample_proportion,
+        "sources": {
+            "codexM": "https://github.com/tsafavi/codex (codex-m)",
+            "fb15k237": "https://github.com/villmow/datasets_knowledge_embedding (FB15k-237)",
+            "wn18rr": "https://github.com/villmow/datasets_knowledge_embedding (WN18RR/original)",
+        },
         "datasets": {},
-        "covidFactNote": "COVID-Fact has no KG backend converter; use frontend/public/demo-scenarios/covidFact_static_demo.json",
+        "covidFact": {
+            "file": "frontend/public/demo-scenarios/covidFact_static_demo.json",
+            "note": "Static guided scenario only (no live KG backend converter).",
+        },
     }
 
     for entry in BENCHMARKS:
         try:
-            payload = _export_dataset(entry)
+            payload = _export_dataset(
+                entry,
+                node_limit=args.node_limit,
+                edge_limit=args.edge_limit,
+                sampling_limit=args.sampling_limit,
+                sample_proportion=args.sample_proportion,
+            )
         except Exception as exc:
             print(f"[{entry['dataset_id']}] FAILED: {exc}")
             index["datasets"][entry["dataset_id"]] = {"error": str(exc)}
@@ -195,6 +243,9 @@ def main() -> int:
         clean = _json_ready(payload)
         out_path.write_text(json.dumps(clean, indent=2), encoding="utf-8")
         print(f"  wrote {out_path.relative_to(REPO_ROOT)}")
+        if args.copy_to_frontend:
+            copied = _copy_to_demo_scenarios(out_path)
+            print(f"  copied -> {copied.relative_to(REPO_ROOT)}")
 
         index["datasets"][entry["dataset_id"]] = {
             "file": str(out_path.relative_to(REPO_ROOT)),

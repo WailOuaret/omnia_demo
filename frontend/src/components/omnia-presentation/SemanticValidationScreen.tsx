@@ -43,7 +43,15 @@ export function SemanticValidationScreen({
       selectedCandidate?.llmRationale ||
       selectedCandidate?.retrievedContext.length,
   );
-  const hasLlmOutput = metrics.llmAvailable && hasCandidateLlmOutput;
+  const isRealLlm = metrics.llmAvailable && hasCandidateLlmOutput;
+  const isPreparedExample =
+    !isRealLlm &&
+    Boolean(
+      selectedCandidate?.llmRationale ||
+        selectedCandidate?.llmDecision ||
+        selectedCandidate?.whyGenerated,
+    );
+  const hasLlmOutput = isRealLlm || isPreparedExample;
   const verdict = hasLlmOutput ? verdictMeta(selectedCandidate?.llmDecision) : null;
   const edgeKind = verdict?.edge ?? "candidate";
   const graph =
@@ -54,11 +62,11 @@ export function SemanticValidationScreen({
   const validatedTotal =
     (metrics.llmAccepted ?? 0) + (metrics.llmRejected ?? 0) + (metrics.llmUnresolved ?? 0);
   const validationRate =
-    hasLlmOutput && metrics.filteringAccepted && validatedTotal > 0
+    isRealLlm && metrics.filteringAccepted && validatedTotal > 0
       ? Math.round((validatedTotal / metrics.filteringAccepted) * 100)
       : null;
 
-  const metricCards: MetricItem[] = hasLlmOutput
+  const metricCards: MetricItem[] = isRealLlm
     ? [
         { label: "Structurally validated", value: fmt(metrics.filteringAccepted) },
         { label: "LLM validated", value: fmt(validatedTotal), tone: "green" },
@@ -68,7 +76,14 @@ export function SemanticValidationScreen({
           : []),
         ...(verdict ? [{ label: "Validation result", value: verdict.label } as MetricItem] : []),
       ]
-    : [];
+    : isPreparedExample && verdict
+      ? [
+          { label: "Validation result", value: verdict.label },
+          ...(selectedCandidate?.llmScore != null
+            ? [{ label: "Confidence score", value: selectedCandidate.llmScore.toFixed(2), tone: "blue" as const }]
+            : []),
+        ]
+      : [];
 
   return (
     <div className="space-y-4">
@@ -76,8 +91,8 @@ export function SemanticValidationScreen({
 
       {!hasLlmOutput ? (
         <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600">
-          LLM validation output is not included for this prepared sample. This screen shows where semantic validation
-          fits in the OMNIA workflow.
+          LLM validation output is not included for this prepared sample. This screen shows where semantic
+          validation fits in the OMNIA workflow.
         </div>
       ) : null}
 
@@ -133,6 +148,11 @@ export function SemanticValidationScreen({
 
             {hasLlmOutput && verdict ? (
               <>
+                {isPreparedExample ? (
+                  <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-medium text-amber-900">
+                    Prepared semantic validation example
+                  </p>
+                ) : null}
                 <div className={`rounded-xl border px-3 py-2.5 text-sm font-medium ${verdict.cls}`}>
                   {verdict.label}
                   {selectedCandidate.llmScore != null ? (
@@ -143,6 +163,10 @@ export function SemanticValidationScreen({
                   <p className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-600">
                     {selectedCandidate.llmRationale}
                   </p>
+                ) : selectedCandidate.whyGenerated ? (
+                  <p className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-600">
+                    {selectedCandidate.whyGenerated}
+                  </p>
                 ) : null}
               </>
             ) : null}
@@ -151,7 +175,7 @@ export function SemanticValidationScreen({
       )}
 
       <CollapsibleDetails label="Show validation context">
-        {hasLlmOutput ? (
+        {hasLlmOutput && (isRealLlm || isPreparedExample) ? (
           <div className="space-y-2 text-sm">
             {selectedCandidate?.retrievedContext.length ? (
               <div className="rounded-lg border border-slate-100 bg-slate-50 px-3 py-2">
